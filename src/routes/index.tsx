@@ -1,15 +1,21 @@
-import { createBrowserRouter } from 'react-router-dom';
 import { DashboardPage } from '@/routes/dashboard';
-import { AboutPage } from '@/routes/abaut';
+import { createBrowserRouter } from 'react-router-dom';
+
 import { NotFound } from './404';
+import { LoginPage } from './login';
+import { RegisterPage } from './register';
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <DashboardPage />,
   },
   {
-    path: '/about',
-    element: <AboutPage />,
+    path: '/login',
+    element: <LoginPage />,
+  },
+  {
+    path: '/register',
+    element: <RegisterPage />,
   },
   {
     path: '*',
