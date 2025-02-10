@@ -16,6 +16,12 @@ const customConfig = defineConfig({
           800: { value: '#01440D' }, // Hijau gelap
           900: { value: '#002407' }, // Hijau sangat gelap
         },
+        border: {
+          value: '#3F3F3F',
+        },
+        secondary: {
+          value: '#262626',
+        },
       },
     },
   },

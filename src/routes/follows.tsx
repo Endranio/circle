@@ -1,8 +1,8 @@
 import { Box, Text } from '@chakra-ui/react';
-export function HomePage() {
+export function FollowsPage() {
   return (
     <Box>
-      <Text>HomePage</Text>
+      <Text>FollowsPage</Text>
     </Box>
   );
 }
