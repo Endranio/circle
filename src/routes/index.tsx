@@ -11,6 +11,7 @@ import { FollowsPage } from './follows';
 import { ProfilePage } from './profile';
 import { SearchPage } from './search';
 import { AuthLayout } from '@/components/ui/layouts/auth-layout';
+import ThreadDetailPage from './thread-detail';
 export const router = createBrowserRouter([
   {
     element: <AppLayout />,
@@ -30,6 +31,10 @@ export const router = createBrowserRouter([
       {
         path: '/profile',
         element: <ProfilePage />,
+      },
+      {
+        path: '/detail/:id',
+        element: <ThreadDetailPage />,
       },
     ],
   },

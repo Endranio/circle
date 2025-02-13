@@ -19,8 +19,11 @@ const customConfig = defineConfig({
         border: {
           value: '#3F3F3F',
         },
-        secondary: {
+        rightBar: {
           value: '#262626',
+        },
+        secondary: {
+          value: '#909090',
         },
       },
     },

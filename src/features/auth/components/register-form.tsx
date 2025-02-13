@@ -30,7 +30,7 @@ export function RegisterForm(props: BoxProps) {
 
   async function OnSubmit(data: RegisterSchemaDTO) {
     toaster.create({
-      title: `Login success`,
+      title: `Register success`,
       type: 'success',
     });
 
@@ -46,9 +46,9 @@ export function RegisterForm(props: BoxProps) {
         onSubmit={handleSubmit(OnSubmit)}
         style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
       >
-        <Field.Root invalid={!!errors['fullName']?.message}>
-          <Input placeholder="Fullname*" {...register('fullName')} />
-          <Field.ErrorText>{errors['fullName']?.message}</Field.ErrorText>
+        <Field.Root invalid={!!errors['fullname']?.message}>
+          <Input placeholder="fullname*" {...register('fullname')} />
+          <Field.ErrorText>{errors['fullname']?.message}</Field.ErrorText>
         </Field.Root>
         <Field.Root invalid={!!errors['email']?.message}>
           <Input placeholder="Email*" {...register('email')} />

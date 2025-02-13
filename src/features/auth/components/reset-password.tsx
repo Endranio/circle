@@ -23,7 +23,7 @@ export function ResetPassword(props: BoxProps) {
     formState: { errors },
     watch,
   } = useForm<ResetPasswordSchemaDTO>({
-    mode: 'onChange',
+    mode: 'all',
     resolver: zodResolver(resetSchema),
   });
   const navigate = useNavigate();

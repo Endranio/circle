@@ -4,6 +4,7 @@ import { IsLogin, userSession } from '@/utils/sesions/sesion';
 import {
   Box,
   BoxProps,
+  Button,
   Card,
   Link as ChakraLink,
   Heading,
@@ -82,17 +83,48 @@ function RightBar(props: BoxProps) {
       {...props}
     >
       <Stack>
-        <Card.Root size="sm" backgroundColor={'secondary'}>
+        <Card.Root size="sm" backgroundColor={'rightBar'}>
           <Card.Header>
             <Heading fontSize="20px"> My Profile</Heading>
           </Card.Header>
           <Card.Body color="fg.muted" gap={'4px'}>
-            <Avatar src={userSession.imageUrl} shape="full" size="lg" />
+            <Box
+              backgroundSize={'cover'}
+              backgroundImage={`url("${userSession.background}")`}
+              width={'100%'}
+              height={'100px'}
+              borderRadius={'18px'}
+            />
+            <Box display={'flex'} justifyContent={'space-between'}>
+              <Avatar
+                marginLeft={'24px'}
+                border={'4px solid #1D1D1D'}
+                marginTop={'-40px'}
+                width={'80px'}
+                height={'80px'}
+                src={userSession.avatarUrl}
+                shape="full"
+                size="lg"
+              />
+              <Button
+                width={'108px'}
+                height={'33px'}
+                borderRadius={'18px'}
+                backgroundColor={'transparent'}
+                border={'1px solid white'}
+                color={'white'}
+                marginTop={'12px'}
+              >
+                Edit Profile
+              </Button>
+            </Box>
             <Text fontSize={'24px'} color={'white'} fontWeight={'700'}>
               {userSession.fullname}
             </Text>
-            <Text fontSize={'14px'}>{userSession.username}</Text>
-            <Text color={'white'}>picked over by worms</Text>
+            <Text color={'secondary'} fontSize={'14px'}>
+              @{userSession.username}
+            </Text>
+            <Text color={'white'}>{userSession.bio}</Text>
             <Box display={'flex'}>
               <Text
                 marginRight={'4px'}
