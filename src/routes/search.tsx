@@ -1,8 +1,9 @@
-import { Box, Text } from '@chakra-ui/react';
-export function SearchPage() {
+import { SearchUsers } from '@/features/search/components/search-user';
+import { Box } from '@chakra-ui/react';
+export function SearchUserPage() {
   return (
     <Box>
-      <Text>SearchPage</Text>
+      <SearchUsers />
     </Box>
   );
 }

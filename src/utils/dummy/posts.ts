@@ -2,7 +2,7 @@ import { Post } from '@/features/home/types/posts';
 
 export const postDatas: Post[] = [
   {
-    id: 'op-luffy-12345',
+    id: '550e8400-e29b-41d4-a716-446655440010',
     user: {
       fullname: 'Monkey D. Luffy',
       username: 'luffy_gear5',
@@ -12,9 +12,10 @@ export const postDatas: Post[] = [
     content: 'I will become the Pirate King!',
     likesCount: 5000,
     repliesCount: 3,
+    isLike: true,
     replies: [
       {
-        id: 'op-zoro-67890',
+        id: '550e8400-e29b-41d4-a716-446655440011',
         user: {
           fullname: 'Roronoa Zoro',
           username: 'zoro_santoryu',
@@ -26,7 +27,7 @@ export const postDatas: Post[] = [
         createdAt: new Date(),
       },
       {
-        id: 'op-sanji-54321',
+        id: '550e8400-e29b-41d4-a716-446655440012',
         user: {
           fullname: 'Sanji Vinsmoke',
           username: 'sanji_blackleg',
@@ -38,7 +39,7 @@ export const postDatas: Post[] = [
         createdAt: new Date(),
       },
       {
-        id: 'op-shanks-11223',
+        id: '550e8400-e29b-41d4-a716-446655440013',
         user: {
           fullname: 'Shanks',
           username: 'shanks_redhair',
@@ -53,7 +54,7 @@ export const postDatas: Post[] = [
     createdAt: new Date(),
   },
   {
-    id: 'op-roger-98765',
+    id: '550e8400-e29b-41d4-a716-446655440014',
     user: {
       fullname: 'Gol D. Roger',
       username: 'roger_pirateking',
@@ -63,9 +64,10 @@ export const postDatas: Post[] = [
     content: 'The greatest treasure is at the end of the Grand Line. Find it!',
     likesCount: 9999,
     repliesCount: 2,
+    isLike: true,
     replies: [
       {
-        id: 'op-rayleigh-22446',
+        id: '550e8400-e29b-41d4-a716-446655440015',
         user: {
           fullname: 'Silvers Rayleigh',
           username: 'rayleigh_darkking',
@@ -77,7 +79,7 @@ export const postDatas: Post[] = [
         createdAt: new Date(),
       },
       {
-        id: 'op-whitebeard-99887',
+        id: '550e8400-e29b-41d4-a716-446655440016',
         user: {
           fullname: 'Edward Newgate',
           username: 'whitebeard_yonko',
@@ -92,7 +94,7 @@ export const postDatas: Post[] = [
     createdAt: new Date(),
   },
   {
-    id: 'op-robin-33445',
+    id: '550e8400-e29b-41d4-a716-446655440017',
     user: {
       fullname: 'Nico Robin',
       username: 'robin_poneglyph',
@@ -102,9 +104,10 @@ export const postDatas: Post[] = [
     content: 'I just want to know the history of the world...',
     likesCount: 3000,
     repliesCount: 1,
+    isLike: true,
     replies: [
       {
-        id: 'op-franky-66778',
+        id: '550e8400-e29b-41d4-a716-446655440018',
         user: {
           fullname: 'Franky',
           username: 'franky_shipwright',

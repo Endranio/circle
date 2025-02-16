@@ -6,6 +6,9 @@ import HeartLogo from '@/assets/icons/heart-full.svg';
 import HeartOutline from '@/assets/icons/heart-outline.svg';
 import ProfileLogo from '@/assets/icons/profile-circle-full.svg';
 import ProfileOutline from '@/assets/icons/profile-circle-outline.svg';
+import LikeLogo from '@/assets/icons/like-full.svg';
+import LikeOutline from '@/assets/icons/like-outline.svg';
+import Message from '@/assets/icons/message-text.svg';
 
 export {
   HomeLogo,
@@ -16,4 +19,7 @@ export {
   HeartOutline,
   ProfileLogo,
   ProfileOutline,
+  LikeLogo,
+  LikeOutline,
+  Message,
 };

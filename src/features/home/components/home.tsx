@@ -9,7 +9,7 @@ export function Home() {
       <CreateThread />
       <Box>
         {postDatas.map((postData) => (
-          <CardThread postData={postData} />
+          <CardThread postData={postData} key={postData.id} />
         ))}
       </Box>
     </Box>

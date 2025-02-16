@@ -2,15 +2,16 @@ import { useNavigate } from 'react-router-dom';
 import { Post } from '../types/posts';
 import { Box, BoxProps, Button, Image, Text } from '@chakra-ui/react';
 import { Avatar } from '@/components/ui/avatar';
-import LikeOutline from '@/assets/icons/like-outline.svg';
+import { LikeLogo, LikeOutline } from '@/assets/icons';
 import MessageTeks from '@/assets/icons/message-text.svg';
+import { useReducer } from 'react';
 interface CardThreadProps extends BoxProps {
   postData: Post;
 }
 
 export function CardThread({ postData }: CardThreadProps) {
   const navigate = useNavigate();
-
+  const [, forceUpdate] = useReducer((state) => state + 1, 0);
   function onClickCard() {
     navigate(`/detail/${postData.id}`);
   }
@@ -43,8 +44,16 @@ export function CardThread({ postData }: CardThreadProps) {
           {postData.content}
         </Text>
         <Box display={'flex'}>
-          <Button variant={'ghost'} display={'flex'} gap={'4px'}>
-            <Image src={LikeOutline} />
+          <Button
+            variant={'ghost'}
+            display={'flex'}
+            gap={'4px'}
+            onClick={() => {
+              postData.isLike = !postData.isLike;
+              forceUpdate();
+            }}
+          >
+            <Image src={postData.isLike ? LikeLogo : LikeOutline} />
             <Text>{postData.likesCount}</Text>
           </Button>
           <Button variant={'ghost'} display={'flex'} gap={'4px'}>

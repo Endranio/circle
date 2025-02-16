@@ -13,7 +13,10 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { Link, Navigate, Outlet, useLocation } from 'react-router-dom';
-import { Avatar } from '../avatar';
+import { Avatar } from '../ui/avatar';
+import { useReducer } from 'react';
+import { SearchUser } from '@/features/search/type/search-user';
+import { SearchUserDatas } from '@/utils/dummy/searchs';
 
 export function AppLayout() {
   if (!IsLogin) return <Navigate to={'/login'} />;
@@ -36,6 +39,7 @@ function LeftBar(props: BoxProps) {
       width={'417px'}
       height={'100vh'}
       padding={'40px'}
+      gap={'16px'}
       borderRight={'1px solid'}
       borderColor={'border'}
       {...props}
@@ -81,6 +85,7 @@ function RightBar(props: BoxProps) {
       borderColor={'border'}
       padding={'40px'}
       {...props}
+      display={{ base: 'none', lg: 'block' }}
     >
       <Stack>
         <Card.Root size="sm" backgroundColor={'rightBar'}>
@@ -110,9 +115,8 @@ function RightBar(props: BoxProps) {
                 width={'108px'}
                 height={'33px'}
                 borderRadius={'18px'}
-                backgroundColor={'transparent'}
                 border={'1px solid white'}
-                color={'white'}
+                variant={'outline'}
                 marginTop={'12px'}
               >
                 Edit Profile
@@ -149,6 +153,67 @@ function RightBar(props: BoxProps) {
           </Card.Body>
         </Card.Root>
       </Stack>
+      <Box
+        marginTop={'16px'}
+        borderRadius={'18px'}
+        backgroundColor={'rightBar'}
+      >
+        <Heading
+          fontSize="20px"
+          lineHeight={'28px'}
+          padding={'16px 0 10px 24px'}
+        >
+          {' '}
+          Suggested Users{' '}
+        </Heading>
+        {SearchUserDatas.slice(0, 5).map((SearchUserData) => (
+          <Suggest key={SearchUserData.id} SearchUserData={SearchUserData} />
+        ))}
+      </Box>
+    </Box>
+  );
+}
+
+interface SearchUserCardProps extends BoxProps {
+  SearchUserData: SearchUser;
+}
+
+function Suggest({ SearchUserData }: SearchUserCardProps) {
+  const [, forceUpdate] = useReducer((state) => state + 1, 0);
+  return (
+    <Box
+      display={'flex'}
+      gap={'16px'}
+      paddingBottom={'16px'}
+      borderColor={'outline'}
+      paddingX={'24px'}
+    >
+      <Avatar
+        name={SearchUserData.fullname}
+        src={SearchUserData.avatarUrl}
+        shape="full"
+        size="full"
+        width={'45px'}
+      />
+
+      <Box display={'flex'} flexDirection={'column'} flex={'264'}>
+        <Text fontWeight={'bold'}>{SearchUserData.fullname}</Text>
+        <Text color={'secondary'}>@{SearchUserData.username}</Text>
+      </Box>
+
+      <Button
+        flex={'99'}
+        borderRadius={'full'}
+        variant={'outline'}
+        border={'1px solid white'}
+        marginY={'auto'}
+        onClick={() => {
+          SearchUserData.isFollow = !SearchUserData.isFollow;
+          forceUpdate();
+        }}
+      >
+        {SearchUserData.isFollow ? 'Unfollow' : 'Follow'}
+      </Button>
     </Box>
   );
 }

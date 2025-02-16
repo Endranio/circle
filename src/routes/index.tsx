@@ -1,7 +1,6 @@
 import { HomePage } from '@/routes/home';
 import { createBrowserRouter } from 'react-router-dom';
 
-import { AppLayout } from '@/components/ui/layouts/app-layout';
 import { NotFound } from './404';
 import { ForgotPage } from './forgot-password';
 import { LoginPage } from './login';
@@ -9,9 +8,12 @@ import { RegisterPage } from './register';
 import { ResetPage } from './reset-password';
 import { FollowsPage } from './follows';
 import { ProfilePage } from './profile';
-import { SearchPage } from './search';
-import { AuthLayout } from '@/components/ui/layouts/auth-layout';
+import { SearchUserPage } from './search';
+
 import ThreadDetailPage from './thread-detail';
+import { AppLayout } from '@/components/layouts/app-layout';
+import { AuthLayout } from '@/components/layouts/auth-layout';
+import { Counter } from './zustand';
 export const router = createBrowserRouter([
   {
     element: <AppLayout />,
@@ -22,7 +24,7 @@ export const router = createBrowserRouter([
       },
       {
         path: '/search',
-        element: <SearchPage />,
+        element: <SearchUserPage />,
       },
       {
         path: '/follows',
@@ -63,5 +65,9 @@ export const router = createBrowserRouter([
   {
     path: '*',
     element: <NotFound />,
+  },
+  {
+    path: '/test',
+    element: <Counter />,
   },
 ]);
