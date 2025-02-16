@@ -2,18 +2,17 @@ import { HomePage } from '@/routes/home';
 import { createBrowserRouter } from 'react-router-dom';
 
 import { NotFound } from './404';
+import { FollowsPage } from './follows';
 import { ForgotPage } from './forgot-password';
 import { LoginPage } from './login';
+import { ProfilePage } from './profile';
 import { RegisterPage } from './register';
 import { ResetPage } from './reset-password';
-import { FollowsPage } from './follows';
-import { ProfilePage } from './profile';
 import { SearchUserPage } from './search';
 
-import ThreadDetailPage from './thread-detail';
 import { AppLayout } from '@/components/layouts/app-layout';
 import { AuthLayout } from '@/components/layouts/auth-layout';
-import { Counter } from './zustand';
+import ThreadDetailPage from './thread-detail';
 export const router = createBrowserRouter([
   {
     element: <AppLayout />,
@@ -65,9 +64,5 @@ export const router = createBrowserRouter([
   {
     path: '*',
     element: <NotFound />,
-  },
-  {
-    path: '/test',
-    element: <Counter />,
   },
 ]);
