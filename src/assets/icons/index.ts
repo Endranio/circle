@@ -9,8 +9,20 @@ import ProfileOutline from '@/assets/icons/profile-circle-outline.svg';
 import LikeLogo from '@/assets/icons/like-full.svg';
 import LikeOutline from '@/assets/icons/like-outline.svg';
 import Message from '@/assets/icons/message-text.svg';
+import Instagram from '@/assets/icons/ri_instagram-fill.svg';
+import Facebook from '@/assets/icons/facebook.svg';
+import Github from '@/assets/icons/uil_github.svg';
+import DumbWays from '@/assets/icons/main-logo.svg';
+import Linkedin from '@/assets/icons/Vector.svg';
+import Logout from '@/assets/icons/logout.svg';
 
 export {
+  Instagram,
+  Logout,
+  Facebook,
+  Github,
+  DumbWays,
+  Linkedin,
   HomeLogo,
   HomeOutline,
   SearchLogo,

@@ -25,6 +25,9 @@ const customConfig = defineConfig({
         secondary: {
           value: '#909090',
         },
+        footer: {
+          value: '#B2B2B2',
+        },
       },
     },
   },

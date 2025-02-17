@@ -1,5 +1,15 @@
 import circlesvg from '@/assets/circle.svg';
+import {
+  DumbWays,
+  Facebook,
+  Github,
+  Instagram,
+  Linkedin,
+  Logout,
+} from '@/assets/icons';
+import { SearchUser } from '@/features/search/type/search-user';
 import { NAV_LINK_MENU } from '@/utils/constants/nav-link';
+import { SearchUserDatas } from '@/utils/dummy/searchs';
 import { IsLogin, userSession } from '@/utils/sesions/sesion';
 import {
   Box,
@@ -12,11 +22,15 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-import { Link, Navigate, Outlet, useLocation } from 'react-router-dom';
-import { Avatar } from '../ui/avatar';
 import { useReducer } from 'react';
-import { SearchUser } from '@/features/search/type/search-user';
-import { SearchUserDatas } from '@/utils/dummy/searchs';
+import {
+  Link,
+  Navigate,
+  Outlet,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
+import { Avatar } from '../ui/avatar';
 
 export function AppLayout() {
   if (!IsLogin) return <Navigate to={'/login'} />;
@@ -34,22 +48,31 @@ export function AppLayout() {
 
 function LeftBar(props: BoxProps) {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+  function onBack() {
+    navigate('/login');
+  }
+
   return (
     <Box
       width={'417px'}
-      height={'100vh'}
+      height={'auto'}
       padding={'40px'}
       gap={'16px'}
       borderRight={'1px solid'}
       borderColor={'border'}
+      display={'flex'}
+      flexDirection={'column'}
       {...props}
     >
       <Image width={'220px'} src={circlesvg} padding={'0 20px'} />
+
       <Box
         display={'flex'}
         flexDirection={'column'}
         marginTop={'23px'}
         gap={'8px'}
+        flex={'1'}
       >
         {NAV_LINK_MENU.map(({ path, logo, label }, index) => (
           <ChakraLink
@@ -71,6 +94,28 @@ function LeftBar(props: BoxProps) {
             </Link>
           </ChakraLink>
         ))}
+        <Button
+          borderRadius={'full'}
+          backgroundColor={'brand.500'}
+          color={'white'}
+          fontSize={'20px'}
+          fontWeight={'600'}
+        >
+          {' '}
+          Create Post
+        </Button>
+      </Box>
+      <Box display={'flex'} gap={'10px'}>
+        <Button
+          onClick={onBack}
+          variant={'ghost'}
+          display={'flex'}
+          gap={'4px'}
+          color={'secondary'}
+        >
+          <Image src={Logout} width={'27px'} />
+        </Button>
+        <Text fontSize={'2xl'}>Logout</Text>
       </Box>
     </Box>
   );
@@ -80,12 +125,14 @@ function RightBar(props: BoxProps) {
   return (
     <Box
       width={'563px'}
-      height={'100vh'}
+      height={'auto'}
       borderLeft={'1px solid'}
       borderColor={'border'}
       padding={'40px'}
+      flexDirection={'column'}
+      gap={'16px'}
       {...props}
-      display={{ base: 'none', lg: 'block' }}
+      display={{ base: 'none', lg: 'flex' }}
     >
       <Stack>
         <Card.Root size="sm" backgroundColor={'rightBar'}>
@@ -153,11 +200,7 @@ function RightBar(props: BoxProps) {
           </Card.Body>
         </Card.Root>
       </Stack>
-      <Box
-        marginTop={'16px'}
-        borderRadius={'18px'}
-        backgroundColor={'rightBar'}
-      >
+      <Box borderRadius={'lg'} backgroundColor={'rightBar'}>
         <Heading
           fontSize="20px"
           lineHeight={'28px'}
@@ -169,6 +212,10 @@ function RightBar(props: BoxProps) {
         {SearchUserDatas.slice(0, 5).map((SearchUserData) => (
           <Suggest key={SearchUserData.id} SearchUserData={SearchUserData} />
         ))}
+      </Box>
+
+      <Box borderRadius={'lg'} backgroundColor={'rightBar'}>
+        <Footer />
       </Box>
     </Box>
   );
@@ -214,6 +261,52 @@ function Suggest({ SearchUserData }: SearchUserCardProps) {
       >
         {SearchUserData.isFollow ? 'Unfollow' : 'Follow'}
       </Button>
+    </Box>
+  );
+}
+
+function Footer() {
+  return (
+    <Box
+      padding={'12px 16px'}
+      gap={'10px'}
+      display={'flex'}
+      flexDirection={'column'}
+    >
+      <Box display={'flex'}>
+        <Text>
+          Develop By{' '}
+          <Text as="span" fontWeight={'700'}>
+            Endranio Palupi
+          </Text>{' '}
+          •&nbsp;
+        </Text>
+        <Box display={'flex'} gap={'8px'}>
+          <ChakraLink>
+            <Image src={Github} />
+          </ChakraLink>
+          <ChakraLink>
+            <Image src={Linkedin} />
+          </ChakraLink>
+          <ChakraLink>
+            <Image src={Facebook} />
+          </ChakraLink>
+          <ChakraLink>
+            <Image src={Instagram} />
+          </ChakraLink>
+        </Box>
+      </Box>
+      <Box
+        fontSize={'14px'}
+        display={'flex'}
+        alignItems={'center'}
+        color={'footer'}
+        gap={2}
+      >
+        <Text>Powered By</Text>
+        <Image height={'16px'} src={DumbWays} />
+        <Text>Dumways Indonesia • #1 Coding Bootcamp</Text>
+      </Box>
     </Box>
   );
 }
