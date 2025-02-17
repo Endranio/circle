@@ -1,8 +1,10 @@
-import { Box, Text } from '@chakra-ui/react';
+import { Follow } from '@/features/follow/followers';
+import { Box, Heading } from '@chakra-ui/react';
 export function FollowsPage() {
   return (
     <Box>
-      <Text>FollowsPage</Text>
+      <Heading fontSize={'28px'}>Follows</Heading>
+      <Follow />
     </Box>
   );
 }

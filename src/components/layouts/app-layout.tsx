@@ -1,13 +1,5 @@
 import circlesvg from '@/assets/circle.svg';
-import {
-  DumbWays,
-  Facebook,
-  Github,
-  Instagram,
-  Linkedin,
-  Logout,
-} from '@/assets/icons';
-import { SearchUser } from '@/features/search/type/search-user';
+import { Logout } from '@/assets/icons';
 import { NAV_LINK_MENU } from '@/utils/constants/nav-link';
 import { SearchUserDatas } from '@/utils/dummy/searchs';
 import { IsLogin, userSession } from '@/utils/sesions/sesion';
@@ -22,7 +14,6 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-import { useReducer } from 'react';
 import {
   Link,
   Navigate,
@@ -31,6 +22,8 @@ import {
   useNavigate,
 } from 'react-router-dom';
 import { Avatar } from '../ui/avatar';
+import { Footer } from './footer';
+import { Suggest } from './suggest';
 
 export function AppLayout() {
   if (!IsLogin) return <Navigate to={'/login'} />;
@@ -216,96 +209,6 @@ function RightBar(props: BoxProps) {
 
       <Box borderRadius={'lg'} backgroundColor={'rightBar'}>
         <Footer />
-      </Box>
-    </Box>
-  );
-}
-
-interface SearchUserCardProps extends BoxProps {
-  SearchUserData: SearchUser;
-}
-
-function Suggest({ SearchUserData }: SearchUserCardProps) {
-  const [, forceUpdate] = useReducer((state) => state + 1, 0);
-  return (
-    <Box
-      display={'flex'}
-      gap={'16px'}
-      paddingBottom={'16px'}
-      borderColor={'outline'}
-      paddingX={'24px'}
-    >
-      <Avatar
-        name={SearchUserData.fullname}
-        src={SearchUserData.avatarUrl}
-        shape="full"
-        size="full"
-        width={'45px'}
-      />
-
-      <Box display={'flex'} flexDirection={'column'} flex={'264'}>
-        <Text fontWeight={'bold'}>{SearchUserData.fullname}</Text>
-        <Text color={'secondary'}>@{SearchUserData.username}</Text>
-      </Box>
-
-      <Button
-        flex={'99'}
-        borderRadius={'full'}
-        variant={'outline'}
-        border={'1px solid white'}
-        marginY={'auto'}
-        onClick={() => {
-          SearchUserData.isFollow = !SearchUserData.isFollow;
-          forceUpdate();
-        }}
-      >
-        {SearchUserData.isFollow ? 'Unfollow' : 'Follow'}
-      </Button>
-    </Box>
-  );
-}
-
-function Footer() {
-  return (
-    <Box
-      padding={'12px 16px'}
-      gap={'10px'}
-      display={'flex'}
-      flexDirection={'column'}
-    >
-      <Box display={'flex'}>
-        <Text>
-          Develop By{' '}
-          <Text as="span" fontWeight={'700'}>
-            Endranio Palupi
-          </Text>{' '}
-          •&nbsp;
-        </Text>
-        <Box display={'flex'} gap={'8px'}>
-          <ChakraLink>
-            <Image src={Github} />
-          </ChakraLink>
-          <ChakraLink>
-            <Image src={Linkedin} />
-          </ChakraLink>
-          <ChakraLink>
-            <Image src={Facebook} />
-          </ChakraLink>
-          <ChakraLink>
-            <Image src={Instagram} />
-          </ChakraLink>
-        </Box>
-      </Box>
-      <Box
-        fontSize={'14px'}
-        display={'flex'}
-        alignItems={'center'}
-        color={'footer'}
-        gap={2}
-      >
-        <Text>Powered By</Text>
-        <Image height={'16px'} src={DumbWays} />
-        <Text>Dumways Indonesia • #1 Coding Bootcamp</Text>
       </Box>
     </Box>
   );
