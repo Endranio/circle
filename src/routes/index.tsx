@@ -14,9 +14,15 @@ import { AppLayout } from '@/components/layouts/app-layout';
 import { AuthLayout } from '@/components/layouts/auth-layout';
 import ThreadDetailPage from './thread-detail';
 import { CounterPage } from './counterPage';
+import { CounterProvider } from '@/context/counter';
+import { AuthProvider } from '@/context/authentication/authentication';
 export const router = createBrowserRouter([
   {
-    element: <AppLayout />,
+    element: (
+      <AuthProvider>
+        <AppLayout />
+      </AuthProvider>
+    ),
     children: [
       {
         path: '/',
@@ -68,6 +74,10 @@ export const router = createBrowserRouter([
   },
   {
     path: 'testing',
-    element: <CounterPage />,
+    element: (
+      <CounterProvider>
+        <CounterPage />,
+      </CounterProvider>
+    ),
   },
 ]);

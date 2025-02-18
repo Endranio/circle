@@ -17,6 +17,8 @@ import { Avatar } from '../ui/avatar';
 import { useReducer } from 'react';
 import { SearchUser } from '@/features/search/type/search-user';
 import { SearchUserDatas } from '@/utils/dummy/searchs';
+import { useAuthContext } from '@/context/authentication/authentication';
+import { ActionType } from '@/context/authentication/authentication-type';
 
 export function AppLayout() {
   if (!IsLogin) return <Navigate to={'/login'} />;
@@ -77,6 +79,14 @@ function LeftBar(props: BoxProps) {
 }
 
 function RightBar(props: BoxProps) {
+  const { avatarUrl, background, followersCount, followingsCount, bio } =
+    userSession;
+
+  const {
+    state: { adress, email, fullname, username },
+    dispatch,
+  } = useAuthContext()!;
+
   return (
     <Box
       width={'563px'}
@@ -95,7 +105,7 @@ function RightBar(props: BoxProps) {
           <Card.Body color="fg.muted" gap={'4px'}>
             <Box
               backgroundSize={'cover'}
-              backgroundImage={`url("${userSession.background}")`}
+              backgroundImage={`url("${background}")`}
               width={'100%'}
               height={'100px'}
               borderRadius={'18px'}
@@ -107,10 +117,30 @@ function RightBar(props: BoxProps) {
                 marginTop={'-40px'}
                 width={'80px'}
                 height={'80px'}
-                src={userSession.avatarUrl}
+                src={avatarUrl}
                 shape="full"
                 size="lg"
               />
+              <Text>{adress}</Text>
+              <Text>{email}</Text>
+              <Text>{fullname}</Text>
+              <Text>{username}</Text>
+
+              <Button
+                onClick={() => {
+                  dispatch({
+                    type: ActionType.SET_AUTHENTICATION,
+                    payload: {
+                      email: 'berhasil@gmail.com',
+                      adress: 'berubah',
+                      fullname: 'ganti',
+                      username: 'jaya',
+                    },
+                  });
+                }}
+              >
+                Ubah
+              </Button>
               <Button
                 width={'108px'}
                 height={'33px'}
@@ -123,12 +153,12 @@ function RightBar(props: BoxProps) {
               </Button>
             </Box>
             <Text fontSize={'24px'} color={'white'} fontWeight={'700'}>
-              {userSession.fullname}
+              {fullname}
             </Text>
             <Text color={'secondary'} fontSize={'14px'}>
-              @{userSession.username}
+              @{username}
             </Text>
-            <Text color={'white'}>{userSession.bio}</Text>
+            <Text color={'white'}>{bio}</Text>
             <Box display={'flex'}>
               <Text
                 marginRight={'4px'}
@@ -136,7 +166,7 @@ function RightBar(props: BoxProps) {
                 fontWeight={'bold'}
                 color={'white'}
               >
-                {userSession.followingsCount}
+                {followingsCount}
               </Text>
               <Text marginRight={'12px'}>Following</Text>
 
@@ -146,7 +176,7 @@ function RightBar(props: BoxProps) {
                 fontWeight={'bold'}
                 color={'white'}
               >
-                {userSession.followersCount}
+                {followersCount}
               </Text>
               <Text>Followers </Text>
             </Box>

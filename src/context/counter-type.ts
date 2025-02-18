@@ -5,15 +5,9 @@ export enum ActionType {
 
 export type AddAction = {
   type: ActionType.ADD;
-  payload: {
-    counter: number;
-  };
 };
 export type SubtractAction = {
   type: ActionType.SUBTRACT;
-  payload: {
-    counter: number;
-  };
 };
 
 export type Actions = AddAction | SubtractAction;

@@ -35,6 +35,6 @@ export function CounterProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function UseUserContext() {
+export function useCounterContext() {
   return useContext(CounterContext);
 }
