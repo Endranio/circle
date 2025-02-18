@@ -31,7 +31,7 @@ export function AppLayout() {
   return (
     <Box display={'flex'}>
       <LeftBar />
-      <Box width={'748px'} padding={'40px'}>
+      <Box width={'748px'} padding={'20px'}>
         <Outlet />
       </Box>
       <RightBar />

@@ -15,8 +15,10 @@ import Github from '@/assets/icons/uil_github.svg';
 import DumbWays from '@/assets/icons/main-logo.svg';
 import Linkedin from '@/assets/icons/Vector.svg';
 import Logout from '@/assets/icons/logout.svg';
+import LeftArrow from '@/assets/icons/Line arrow-left.svg';
 
 export {
+  LeftArrow,
   Instagram,
   Logout,
   Facebook,

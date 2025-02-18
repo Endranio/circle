@@ -1,8 +1,9 @@
-import { Box, Text } from '@chakra-ui/react';
+import { MyProfile } from '@/features/my-profile/components/my-profile';
+import { Box } from '@chakra-ui/react';
 export function ProfilePage() {
   return (
     <Box>
-      <Text>ProfilePage</Text>
+      <MyProfile />
     </Box>
   );
 }
