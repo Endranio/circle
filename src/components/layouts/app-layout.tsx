@@ -1,8 +1,8 @@
 import circlesvg from '@/assets/circle.svg';
 import { Logout } from '@/assets/icons';
+import { useAuthStore } from '@/stores/auth';
 import { NAV_LINK_MENU } from '@/utils/constants/nav-link';
 import { SearchUserDatas } from '@/utils/dummy/searchs';
-import { IsLogin, userSession } from '@/utils/sesions/sesion';
 import {
   Box,
   BoxProps,
@@ -26,7 +26,9 @@ import { Footer } from './footer';
 import { Suggest } from './suggest';
 
 export function AppLayout() {
-  if (!IsLogin) return <Navigate to={'/login'} />;
+  const { username } = useAuthStore((state) => state.user);
+
+  if (!username) return <Navigate to={'/login'} />;
 
   return (
     <Box display={'flex'}>
@@ -115,6 +117,16 @@ function LeftBar(props: BoxProps) {
 }
 
 function RightBar(props: BoxProps) {
+  const {
+    avatarUrl,
+    background,
+    bio,
+    followersCount,
+    followingsCount,
+    fullname,
+    username,
+  } = useAuthStore((state) => state.user);
+
   return (
     <Box
       width={'563px'}
@@ -135,7 +147,7 @@ function RightBar(props: BoxProps) {
           <Card.Body color="fg.muted" gap={'4px'}>
             <Box
               backgroundSize={'cover'}
-              backgroundImage={`url("${userSession.background}")`}
+              backgroundImage={`url("${background}")`}
               width={'100%'}
               height={'100px'}
               borderRadius={'18px'}
@@ -147,7 +159,7 @@ function RightBar(props: BoxProps) {
                 marginTop={'-40px'}
                 width={'80px'}
                 height={'80px'}
-                src={userSession.avatarUrl}
+                src={avatarUrl}
                 shape="full"
                 size="lg"
               />
@@ -163,12 +175,12 @@ function RightBar(props: BoxProps) {
               </Button>
             </Box>
             <Text fontSize={'24px'} color={'white'} fontWeight={'700'}>
-              {userSession.fullname}
+              {fullname}
             </Text>
             <Text color={'secondary'} fontSize={'14px'}>
-              @{userSession.username}
+              @{username}
             </Text>
-            <Text color={'white'}>{userSession.bio}</Text>
+            <Text color={'white'}>{bio}</Text>
             <Box display={'flex'}>
               <Text
                 marginRight={'4px'}
@@ -176,7 +188,7 @@ function RightBar(props: BoxProps) {
                 fontWeight={'bold'}
                 color={'white'}
               >
-                {userSession.followingsCount}
+                {followingsCount}
               </Text>
               <Text marginRight={'12px'}>Following</Text>
 
@@ -186,7 +198,7 @@ function RightBar(props: BoxProps) {
                 fontWeight={'bold'}
                 color={'white'}
               >
-                {userSession.followersCount}
+                {followersCount}
               </Text>
               <Text>Followers </Text>
             </Box>

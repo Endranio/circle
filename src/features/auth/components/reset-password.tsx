@@ -1,6 +1,6 @@
 import circlesvg from '@/assets/circle.svg';
 import { toaster } from '@/components/ui/toaster';
-import dummyUser from '@/utils/dummy/user.json';
+import { userDatas } from '@/utils/dummy/user';
 import { ResetPasswordSchemaDTO, resetSchema } from '@/utils/schemas/schema';
 import {
   Box,
@@ -31,7 +31,7 @@ export function ResetPassword(props: BoxProps) {
   const [searchParams] = useSearchParams();
   const email = searchParams.get('email');
   async function OnSubmit(data: ResetPasswordSchemaDTO) {
-    const user = dummyUser.find((dummyUser) => dummyUser.email === email);
+    const user = userDatas.find((userData) => userData.email === email);
 
     if (!user)
       return toaster.create({

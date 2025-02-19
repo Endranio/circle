@@ -3,7 +3,7 @@ import { Box } from '@chakra-ui/react';
 
 export function ResetPage() {
   return (
-    <Box display={'flex'} justifyContent={'center'} marginTop={'128px'}>
+    <Box display={'flex'} justifyContent={'center'} paddingTop={'128px'}>
       <ResetPassword width={'412px'} />
     </Box>
   );

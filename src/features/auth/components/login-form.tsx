@@ -1,4 +1,7 @@
 import circlesvg from '@/assets/circle.svg';
+import { toaster } from '@/components/ui/toaster';
+import { useAuthStore } from '@/stores/auth';
+import { userDatas } from '@/utils/dummy/user';
 import { loginSchema, LoginSchemaDTO } from '@/utils/schemas/schema';
 import {
   Box,
@@ -12,27 +15,23 @@ import {
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
-import { toaster } from '@/components/ui/toaster';
-import { useNavigate } from 'react-router-dom';
-import dummyUser from '@/utils/dummy/user.json';
+import { Link, useNavigate } from 'react-router-dom';
 
 export function LoginForm(props: BoxProps) {
   const {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
   } = useForm<LoginSchemaDTO>({
     mode: 'onChange',
     resolver: zodResolver(loginSchema),
   });
   const navigate = useNavigate();
 
+  const { setUser } = useAuthStore((state) => state);
+
   async function OnSubmit(data: LoginSchemaDTO) {
-    const user = dummyUser.find(
-      (dummyUser) => dummyUser.email === watch('email')
-    );
+    const user = userDatas.find((userData) => userData.email === data.email);
 
     if (!user)
       return toaster.create({
@@ -40,13 +39,15 @@ export function LoginForm(props: BoxProps) {
         type: 'error',
       });
 
-    const isPasswordCorect = user?.password === watch('password');
+    const isPasswordCorect = user?.password === data.password;
 
     if (!isPasswordCorect)
       return toaster.create({
         title: `Email/Password is wrong`,
         type: 'error',
       });
+
+    setUser(user);
 
     toaster.create({
       title: `Login success`,

@@ -1,6 +1,6 @@
 import circlesvg from '@/assets/circle.svg';
 import { toaster } from '@/components/ui/toaster';
-import dummyUser from '@/utils/dummy/user.json';
+import { userDatas } from '@/utils/dummy/user';
 import { ForgotPasswordSchemaDTO, forgotSchema } from '@/utils/schemas/schema';
 import {
   Box,
@@ -28,8 +28,8 @@ export function ForgotPassword(props: BoxProps) {
   });
 
   async function OnSubmit(data: ForgotPasswordSchemaDTO) {
-    const user = dummyUser.find(
-      (dummyUser) => dummyUser.email === watch('email')
+    const user = userDatas.find(
+      (userData) => userData.email === watch('email')
     );
 
     if (!user)
