@@ -13,6 +13,7 @@ import { SearchUserPage } from './search';
 import { AppLayout } from '@/components/layouts/app-layout';
 import { AuthLayout } from '@/components/layouts/auth-layout';
 import ThreadDetailPage from './thread-detail';
+import { CounterPage } from './counter';
 export const router = createBrowserRouter([
   {
     element: <AppLayout />,
@@ -64,5 +65,9 @@ export const router = createBrowserRouter([
   {
     path: '*',
     element: <NotFound />,
+  },
+  {
+    path: '/test',
+    element: <CounterPage />,
   },
 ]);
