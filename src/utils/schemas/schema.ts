@@ -4,6 +4,7 @@ export const registerSchema = z.object({
   fullname: z.string().min(4).max(100),
   email: z.string().email(),
   password: z.string().min(6),
+  username: z.string().min(2),
 });
 
 export type RegisterSchemaDTO = z.infer<typeof registerSchema>;
@@ -21,13 +22,9 @@ export const forgotSchema = z.object({
 
 export type ForgotPasswordSchemaDTO = z.infer<typeof forgotSchema>;
 
-export const resetSchema = z
-  .object({
-    password: z.string().min(6),
-    confirmPassword: z.string().min(6),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "passwords don't match",
-    path: ['confirmPassword'],
-  });
+export const resetSchema = z.object({
+  oldpassword: z.string().min(6),
+  newpassword: z.string().min(6),
+});
+
 export type ResetPasswordSchemaDTO = z.infer<typeof resetSchema>;

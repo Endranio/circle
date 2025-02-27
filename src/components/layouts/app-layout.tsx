@@ -24,11 +24,12 @@ import {
 import { Avatar } from '../ui/avatar';
 import { Footer } from './footer';
 import { Suggest } from './suggest';
+import Cookies from 'js-cookie';
 
 export function AppLayout() {
-  const { username } = useAuthStore((state) => state.user);
+  const token = Cookies.get('token');
 
-  if (!username) return <Navigate to={'/login'} />;
+  if (!token) return <Navigate to={'/login'} />;
 
   return (
     <Box display={'flex'}>
@@ -45,6 +46,7 @@ function LeftBar(props: BoxProps) {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   function onBack() {
+    Cookies.remove('token');
     navigate('/login');
   }
 
@@ -109,8 +111,8 @@ function LeftBar(props: BoxProps) {
           color={'secondary'}
         >
           <Image src={Logout} width={'27px'} />
+          <Text fontSize={'2xl'}>Logout</Text>
         </Button>
-        <Text fontSize={'2xl'}>Logout</Text>
       </Box>
     </Box>
   );
@@ -118,13 +120,8 @@ function LeftBar(props: BoxProps) {
 
 function RightBar(props: BoxProps) {
   const {
-    avatarUrl,
-    background,
-    bio,
-    followersCount,
-    followingsCount,
-    fullname,
     username,
+    profile: { fullname, bio, bannerUrl, avatarUrl },
   } = useAuthStore((state) => state.user);
 
   return (
@@ -147,7 +144,7 @@ function RightBar(props: BoxProps) {
           <Card.Body color="fg.muted" gap={'4px'}>
             <Box
               backgroundSize={'cover'}
-              backgroundImage={`url("${background}")`}
+              backgroundImage={`url("${bannerUrl}")`}
               width={'100%'}
               height={'100px'}
               borderRadius={'18px'}
@@ -159,7 +156,10 @@ function RightBar(props: BoxProps) {
                 marginTop={'-40px'}
                 width={'80px'}
                 height={'80px'}
-                src={avatarUrl}
+                src={
+                  avatarUrl ||
+                  `https://api.dicebear.com/9.x/notionists-neutral/svg?seed=${fullname}`
+                }
                 shape="full"
                 size="lg"
               />
@@ -187,9 +187,7 @@ function RightBar(props: BoxProps) {
                 as={'span'}
                 fontWeight={'bold'}
                 color={'white'}
-              >
-                {followingsCount}
-              </Text>
+              ></Text>
               <Text marginRight={'12px'}>Following</Text>
 
               <Text
@@ -197,9 +195,7 @@ function RightBar(props: BoxProps) {
                 as={'span'}
                 fontWeight={'bold'}
                 color={'white'}
-              >
-                {followersCount}
-              </Text>
+              ></Text>
               <Text>Followers </Text>
             </Box>
           </Card.Body>

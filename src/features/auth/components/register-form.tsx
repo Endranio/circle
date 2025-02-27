@@ -16,6 +16,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toaster } from '@/components/ui/toaster';
 import { useNavigate } from 'react-router-dom';
 
+import { api } from '@/libs/api';
+import axios from 'axios';
+
 export function RegisterForm(props: BoxProps) {
   const {
     register,
@@ -29,14 +32,27 @@ export function RegisterForm(props: BoxProps) {
   const navigate = useNavigate();
 
   async function OnSubmit(data: RegisterSchemaDTO) {
-    toaster.create({
-      title: `Register success`,
-      type: 'success',
-    });
+    try {
+      const response = await api.post('/auth/register', data);
 
-    console.log(data);
+      toaster.create({
+        title: response.data.message,
+        type: 'success',
+      });
+      navigate({ pathname: '/login' });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return toaster.create({
+          title: error.response?.data.message,
+          type: 'error',
+        });
+      }
 
-    navigate({ pathname: '/login' });
+      toaster.create({
+        title: `Something wrong`,
+        type: 'error',
+      });
+    }
   }
   return (
     <Box display={'flex'} flexDirection={'column'} gap={'12px'} {...props}>
@@ -49,6 +65,10 @@ export function RegisterForm(props: BoxProps) {
         <Field.Root invalid={!!errors['fullname']?.message}>
           <Input placeholder="fullname*" {...register('fullname')} />
           <Field.ErrorText>{errors['fullname']?.message}</Field.ErrorText>
+        </Field.Root>
+        <Field.Root invalid={!!errors['username']?.message}>
+          <Input placeholder="username*" {...register('username')} />
+          <Field.ErrorText>{errors['username']?.message}</Field.ErrorText>
         </Field.Root>
         <Field.Root invalid={!!errors['email']?.message}>
           <Input placeholder="Email*" {...register('email')} />

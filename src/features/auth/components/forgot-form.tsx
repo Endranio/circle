@@ -1,6 +1,6 @@
 import circlesvg from '@/assets/circle.svg';
 import { toaster } from '@/components/ui/toaster';
-import { userDatas } from '@/utils/dummy/user';
+import { api } from '@/libs/api';
 import { ForgotPasswordSchemaDTO, forgotSchema } from '@/utils/schemas/schema';
 import {
   Box,
@@ -13,6 +13,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 
@@ -21,28 +22,30 @@ export function ForgotPassword(props: BoxProps) {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
   } = useForm<ForgotPasswordSchemaDTO>({
     mode: 'onChange',
     resolver: zodResolver(forgotSchema),
   });
 
-  async function OnSubmit(data: ForgotPasswordSchemaDTO) {
-    const user = userDatas.find(
-      (userData) => userData.email === watch('email')
-    );
-
-    if (!user)
-      return toaster.create({
-        title: `Email is wrong`,
+  async function OnSubmit({ email }: ForgotPasswordSchemaDTO) {
+    try {
+      const response = await api.post('/auth/forgot-password', { email });
+      toaster.create({
+        title: response.data.message,
+        type: 'success',
+      });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return toaster.create({
+          title: error.response?.data.message,
+          type: 'error',
+        });
+      }
+      toaster.create({
+        title: `Something wrong`,
         type: 'error',
       });
-
-    toaster.create({
-      title: `Please check your email`,
-      type: 'success',
-    });
-    console.log(data);
+    }
   }
 
   return (

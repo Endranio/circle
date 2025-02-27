@@ -1,7 +1,7 @@
 import circlesvg from '@/assets/circle.svg';
 import { toaster } from '@/components/ui/toaster';
+import { api } from '@/libs/api';
 import { useAuthStore } from '@/stores/auth';
-import { userDatas } from '@/utils/dummy/user';
 import { loginSchema, LoginSchemaDTO } from '@/utils/schemas/schema';
 import {
   Box,
@@ -14,6 +14,8 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -28,33 +30,35 @@ export function LoginForm(props: BoxProps) {
   });
   const navigate = useNavigate();
 
-  const { setUser } = useAuthStore((state) => state);
+  const { setUser } = useAuthStore();
 
   async function OnSubmit(data: LoginSchemaDTO) {
-    const user = userDatas.find((userData) => userData.email === data.email);
-
-    if (!user)
-      return toaster.create({
-        title: `Email/Password is wrong`,
-        type: 'error',
+    try {
+      const response = await api.post('/auth/login', data);
+      setUser(response.data.data.user);
+      Cookies.set('token', response.data.data.token, {
+        expires: 1,
       });
 
-    const isPasswordCorect = user?.password === data.password;
-
-    if (!isPasswordCorect)
-      return toaster.create({
-        title: `Email/Password is wrong`,
-        type: 'error',
+      toaster.create({
+        title: `Login success`,
+        type: 'success',
       });
 
-    setUser(user);
+      navigate({ pathname: '/' });
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return toaster.create({
+          title: error.response?.data.message,
+          type: 'error',
+        });
+      }
 
-    toaster.create({
-      title: `Login success`,
-      type: 'success',
-    });
-    console.log(data);
-    navigate({ pathname: '/' });
+      toaster.create({
+        title: `Something wrong`,
+        type: 'error',
+      });
+    }
   }
 
   return (

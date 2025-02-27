@@ -38,11 +38,20 @@ export function CardThread({ postData }: CardThreadProps) {
           <Text fontWeight={'bold'}>{postData.user.fullname}</Text>
           <Text color={'secondary'}>@{postData.user.username}</Text>
           <Text color={'secondary'}>•</Text>
-          <Text color={'secondary'}>{postData.createdAt.getHours()}h</Text>
+          <Text color={'secondary'}>
+            {new Date(postData.createdAt).getHours()}h
+          </Text>
         </Box>
+
         <Text cursor={'pointer'} onClick={onClickCard}>
           {postData.content}
         </Text>
+        <Image
+          src={postData.images}
+          maxWidth={'300px'}
+          maxHeight={'300px'}
+          objectFit={'contain'}
+        />
         <Box display={'flex'}>
           <Button
             variant={'ghost'}

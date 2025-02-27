@@ -14,6 +14,7 @@ export type Reply = {
 
 export type Post = {
   id: string;
+  images: string;
   user: UserPost;
   content: string;
   likesCount: number;
