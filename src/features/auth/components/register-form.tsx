@@ -10,50 +10,10 @@ import {
 } from '@chakra-ui/react';
 import circlesvg from '@/assets/circle.svg';
 import { Link } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { registerSchema, RegisterSchemaDTO } from '@/utils/schemas/schema';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { toaster } from '@/components/ui/toaster';
-import { useNavigate } from 'react-router-dom';
-
-import { api } from '@/libs/api';
-import axios from 'axios';
+import { UseRegister } from '../hooks/use-register';
 
 export function RegisterForm(props: BoxProps) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<RegisterSchemaDTO>({
-    mode: 'onChange',
-    resolver: zodResolver(registerSchema),
-  });
-
-  const navigate = useNavigate();
-
-  async function OnSubmit(data: RegisterSchemaDTO) {
-    try {
-      const response = await api.post('/auth/register', data);
-
-      toaster.create({
-        title: response.data.message,
-        type: 'success',
-      });
-      navigate({ pathname: '/login' });
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        return toaster.create({
-          title: error.response?.data.message,
-          type: 'error',
-        });
-      }
-
-      toaster.create({
-        title: `Something wrong`,
-        type: 'error',
-      });
-    }
-  }
+  const { OnSubmit, errors, handleSubmit, register } = UseRegister();
   return (
     <Box display={'flex'} flexDirection={'column'} gap={'12px'} {...props}>
       <Image width="108px" src={circlesvg} />

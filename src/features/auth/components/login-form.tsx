@@ -1,8 +1,4 @@
 import circlesvg from '@/assets/circle.svg';
-import { toaster } from '@/components/ui/toaster';
-import { api } from '@/libs/api';
-import { useAuthStore } from '@/stores/auth';
-import { loginSchema, LoginSchemaDTO } from '@/utils/schemas/schema';
 import {
   Box,
   BoxProps,
@@ -13,53 +9,11 @@ import {
   Input,
   Text,
 } from '@chakra-ui/react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
-import Cookies from 'js-cookie';
-import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { UseLoginForm } from '../hooks/use-login';
 
 export function LoginForm(props: BoxProps) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginSchemaDTO>({
-    mode: 'onChange',
-    resolver: zodResolver(loginSchema),
-  });
-  const navigate = useNavigate();
-
-  const { setUser } = useAuthStore();
-
-  async function OnSubmit(data: LoginSchemaDTO) {
-    try {
-      const response = await api.post('/auth/login', data);
-      setUser(response.data.data.user);
-      Cookies.set('token', response.data.data.token, {
-        expires: 1,
-      });
-
-      toaster.create({
-        title: `Login success`,
-        type: 'success',
-      });
-
-      navigate({ pathname: '/' });
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        return toaster.create({
-          title: error.response?.data.message,
-          type: 'error',
-        });
-      }
-
-      toaster.create({
-        title: `Something wrong`,
-        type: 'error',
-      });
-    }
-  }
+  const { OnSubmit, errors, handleSubmit, register } = UseLoginForm();
 
   return (
     <Box display={'flex'} flexDirection={'column'} gap={'12px'} {...props}>

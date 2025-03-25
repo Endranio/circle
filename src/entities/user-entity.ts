@@ -1,4 +1,4 @@
-import { ProfileEntity } from './profile-entitiy';
+import { ProfileEntity } from './profile-entity';
 
 export interface UserEntity {
   id: string;

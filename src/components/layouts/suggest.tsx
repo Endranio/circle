@@ -1,6 +1,5 @@
 import { SearchUser } from '@/features/search/type/search-user';
 import { Box, BoxProps, Button, Text } from '@chakra-ui/react';
-import { useReducer } from 'react';
 import { Avatar } from '../ui/avatar';
 
 interface SearchUserCardProps extends BoxProps {
@@ -8,7 +7,7 @@ interface SearchUserCardProps extends BoxProps {
 }
 
 export function Suggest({ SearchUserData }: SearchUserCardProps) {
-  const [, forceUpdate] = useReducer((state) => state + 1, 0);
+  // const [, forceUpdate] = useReducer((state) => state + 1, 0);
   return (
     <Box
       display={'flex'}
@@ -18,15 +17,15 @@ export function Suggest({ SearchUserData }: SearchUserCardProps) {
       paddingX={'24px'}
     >
       <Avatar
-        name={SearchUserData.fullname}
-        src={SearchUserData.avatarUrl}
+        name={SearchUserData.profile.fullname}
+        src={SearchUserData.profile.avatarUrl ?? ''}
         shape="full"
         size="full"
         width={'45px'}
       />
 
       <Box display={'flex'} flexDirection={'column'} flex={'264'}>
-        <Text fontWeight={'bold'}>{SearchUserData.fullname}</Text>
+        <Text fontWeight={'bold'}>{SearchUserData.profile.fullname}</Text>
         <Text color={'secondary'}>@{SearchUserData.username}</Text>
       </Box>
 
@@ -36,12 +35,13 @@ export function Suggest({ SearchUserData }: SearchUserCardProps) {
         variant={'outline'}
         border={'1px solid white'}
         marginY={'auto'}
-        onClick={() => {
-          SearchUserData.isFollow = !SearchUserData.isFollow;
-          forceUpdate();
-        }}
+        // onClick={() => {
+        //   SearchUserData.uisFollow = !SearchUserData.isFollow;
+        //   forceUpdate();
+        // }}
       >
-        {SearchUserData.isFollow ? 'Unfollow' : 'Follow'}
+        {/* {SearchUserData.isFollow ? 'Unfollow' : 'Follow'} */}
+        Follow
       </Button>
     </Box>
   );

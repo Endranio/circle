@@ -1,4 +1,4 @@
-import { UserEntity } from '@/entities/user-entitiy';
+import { UserEntity } from '@/entities/user-entity';
 
 type User = UserEntity & {
   fullname: string;

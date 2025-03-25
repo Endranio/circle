@@ -30,11 +30,11 @@ export const router = createBrowserRouter([
         element: <FollowsPage />,
       },
       {
-        path: '/profile',
+        path: '/profile/:id',
         element: <ProfilePage />,
       },
       {
-        path: '/detail/:id',
+        path: '/detail/:threadId',
         element: <ThreadDetailPage />,
       },
     ],

@@ -16,8 +16,10 @@ import DumbWays from '@/assets/icons/main-logo.svg';
 import Linkedin from '@/assets/icons/Vector.svg';
 import Logout from '@/assets/icons/logout.svg';
 import LeftArrow from '@/assets/icons/Line arrow-left.svg';
+import InputImage from '@/assets/icons/Frame 1000008664.svg';
 
 export {
+  InputImage,
   LeftArrow,
   Instagram,
   Logout,

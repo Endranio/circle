@@ -8,6 +8,7 @@ import {
   SearchLogo,
   SearchOutline,
 } from '@/assets/icons';
+import { useAuthStore } from '@/stores/auth';
 
 interface NavLinkMenu {
   label: string;
@@ -17,38 +18,41 @@ interface NavLinkMenu {
     outline: string;
   };
 }
+export const NAV_LINK_MENU = (): NavLinkMenu[] => {
+  const { user } = useAuthStore();
 
-export const NAV_LINK_MENU: NavLinkMenu[] = [
-  {
-    label: 'Home',
-    logo: {
-      full: HomeLogo,
-      outline: HomeOutline,
+  return [
+    {
+      label: 'Home',
+      logo: {
+        full: HomeLogo,
+        outline: HomeOutline,
+      },
+      path: '/',
     },
-    path: '/',
-  },
-  {
-    label: 'Search',
-    logo: {
-      full: SearchLogo,
-      outline: SearchOutline,
+    {
+      label: 'Search',
+      logo: {
+        full: SearchLogo,
+        outline: SearchOutline,
+      },
+      path: '/search',
     },
-    path: '/search',
-  },
-  {
-    label: 'Follows',
-    logo: {
-      full: HeartLogo,
-      outline: HeartOutline,
+    {
+      label: 'Follows',
+      logo: {
+        full: HeartLogo,
+        outline: HeartOutline,
+      },
+      path: '/follows',
     },
-    path: '/follows',
-  },
-  {
-    label: 'Profile',
-    logo: {
-      full: ProfileLogo,
-      outline: ProfileOutline,
+    {
+      label: 'Profile',
+      logo: {
+        full: ProfileLogo,
+        outline: ProfileOutline,
+      },
+      path: `/profile/${user.id}`,
     },
-    path: '/profile',
-  },
-];
+  ];
+};

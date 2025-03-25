@@ -1,7 +1,4 @@
 import circlesvg from '@/assets/circle.svg';
-import { toaster } from '@/components/ui/toaster';
-import { api } from '@/libs/api';
-import { ResetPasswordSchemaDTO, resetSchema } from '@/utils/schemas/schema';
 import {
   Box,
   BoxProps,
@@ -12,57 +9,11 @@ import {
   Input,
   Text,
 } from '@chakra-ui/react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
-import { useForm } from 'react-hook-form';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { UseResetPass } from '../hooks/use-reset';
 
 export function ResetPassword(props: BoxProps) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ResetPasswordSchemaDTO>({
-    mode: 'all',
-    resolver: zodResolver(resetSchema),
-  });
-  const navigate = useNavigate();
-
-  const [searchParams] = useSearchParams();
-  const token = searchParams.get('token');
-  async function OnSubmit({
-    oldpassword,
-    newpassword,
-  }: ResetPasswordSchemaDTO) {
-    try {
-      const response = await api.post(
-        '/auth/reset-password',
-        { oldpassword, newpassword },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      toaster.create({
-        title: response.data.message,
-        type: 'success',
-      });
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        return toaster.create({
-          title: error.response?.data.message,
-          type: 'error',
-        });
-      }
-      toaster.create({
-        title: `Something wrong`,
-        type: 'error',
-      });
-    }
-
-    navigate({ pathname: '/login' });
-  }
+  const { OnSubmit, errors, handleSubmit, register } = UseResetPass();
 
   return (
     <Box display={'flex'} flexDirection={'column'} gap={'12px'} {...props}>
@@ -72,21 +23,23 @@ export function ResetPassword(props: BoxProps) {
         onSubmit={handleSubmit(OnSubmit)}
         style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
       >
-        <Field.Root invalid={!!errors['oldpassword']?.message}>
-          <Input
-            placeholder="New Password*"
-            type="password"
-            {...register('oldpassword')}
-          />
-          <Field.ErrorText>{errors['oldpassword']?.message}</Field.ErrorText>
-        </Field.Root>
         <Field.Root invalid={!!errors['newpassword']?.message}>
           <Input
-            placeholder="Confirm New Password*"
+            placeholder="New Password *"
             type="password"
             {...register('newpassword')}
           />
           <Field.ErrorText>{errors['newpassword']?.message}</Field.ErrorText>
+        </Field.Root>
+        <Field.Root invalid={!!errors['confirmpassword']?.message}>
+          <Input
+            placeholder="Confirm Password*"
+            type="password"
+            {...register('confirmpassword')}
+          />
+          <Field.ErrorText>
+            {errors['confirmpassword']?.message}
+          </Field.ErrorText>
         </Field.Root>
 
         <Button backgroundColor={'brand.500'} color={'white'} type="submit">

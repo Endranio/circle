@@ -1,7 +1,4 @@
 import circlesvg from '@/assets/circle.svg';
-import { toaster } from '@/components/ui/toaster';
-import { api } from '@/libs/api';
-import { ForgotPasswordSchemaDTO, forgotSchema } from '@/utils/schemas/schema';
 import {
   Box,
   BoxProps,
@@ -12,42 +9,11 @@ import {
   Input,
   Text,
 } from '@chakra-ui/react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
-import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+import { UseForgotPass } from '../hooks/use-frogot';
 
 export function ForgotPassword(props: BoxProps) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ForgotPasswordSchemaDTO>({
-    mode: 'onChange',
-    resolver: zodResolver(forgotSchema),
-  });
-
-  async function OnSubmit({ email }: ForgotPasswordSchemaDTO) {
-    try {
-      const response = await api.post('/auth/forgot-password', { email });
-      toaster.create({
-        title: response.data.message,
-        type: 'success',
-      });
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        return toaster.create({
-          title: error.response?.data.message,
-          type: 'error',
-        });
-      }
-      toaster.create({
-        title: `Something wrong`,
-        type: 'error',
-      });
-    }
-  }
-
+  const { OnSubmit, errors, handleSubmit, register } = UseForgotPass();
   return (
     <Box display={'flex'} flexDirection={'column'} gap={'12px'} {...props}>
       <Image width="108px" src={circlesvg} />

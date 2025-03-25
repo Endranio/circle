@@ -1,5 +1,5 @@
-import galleryAddLogo from '@/assets/icons/gallery-add.svg';
-
+// import galleryAddLogo from '@/assets/icons/gallery-add.svg';
+// import { Avatar } from '@/components/ui/avatar';
 import { Avatar } from '@/components/ui/avatar';
 import {
   DialogBackdrop,
@@ -13,37 +13,28 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { toaster } from '@/components/ui/toaster';
-import { ThreadResponse } from '@/features/thread/dto/thread';
+import { ReplyResponse } from '@/features/reply/dto/reply-response';
 import { api } from '@/libs/api';
 import { useAuthStore } from '@/stores/auth';
 import {
-  createThreadSchema,
-  CreateThreadSchemaDTO,
-} from '@/utils/schemas/thread-schema';
-import {
-  Box,
-  Button,
-  Field,
-  Image,
-  Input,
-  Spinner,
-  Text,
-  Textarea,
-} from '@chakra-ui/react';
+  createReplySchema,
+  CreateReplySchemaDTO,
+} from '@/utils/schemas/reply-schema';
+import { Box, Button, Field, Image, Text, Textarea } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useParams } from 'react-router-dom';
 
-export default function CreateThread() {
+export default function CreateReply() {
+  const { threadId } = useParams();
   const {
     user: {
       profile: { avatarUrl, fullname },
     },
   } = useAuthStore();
-  const [preview, setPreview] = useState<string | null>(null);
-  const inputFileRef = useRef<HTMLInputElement | null>(null);
   const [isOpen, setIsOpen] = useState(false);
 
   const {
@@ -51,34 +42,23 @@ export default function CreateThread() {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<CreateThreadSchemaDTO>({
+  } = useForm<CreateReplySchemaDTO>({
     mode: 'onChange',
-    resolver: zodResolver(createThreadSchema),
+    resolver: zodResolver(createReplySchema),
   });
 
-  const {
-    ref: registerImagesRef,
-    onChange: registerImageOnChange,
-    ...resRegisterImages
-  } = register('images');
-
-  function onClickFile() {
-    inputFileRef?.current?.click();
-  }
-
   const queryClient = useQueryClient();
-  const { mutateAsync, isPending } = useMutation<
-    ThreadResponse,
+  const { mutateAsync } = useMutation<
+    ReplyResponse,
     Error,
-    CreateThreadSchemaDTO
+    CreateReplySchemaDTO
   >({
-    mutationKey: ['threads'],
-    mutationFn: async (data: CreateThreadSchemaDTO) => {
-      const formData = new FormData();
-      formData.append('content', data.content);
-      formData.append('images', data.images[0]);
-
-      const response = await api.post<ThreadResponse>('/threads', formData);
+    mutationKey: ['create-reply'],
+    mutationFn: async (data: CreateReplySchemaDTO) => {
+      const response = await api.post<ReplyResponse>(
+        `/replies/${threadId}`,
+        data
+      );
       return response.data;
     },
     onError: (error) => {
@@ -96,7 +76,7 @@ export default function CreateThread() {
     },
     onSuccess: async (data) => {
       await queryClient.invalidateQueries({
-        queryKey: ['threads'],
+        queryKey: [`replies/${threadId}`],
       });
       toaster.create({
         title: data.message,
@@ -105,20 +85,13 @@ export default function CreateThread() {
     },
   });
 
-  async function onCreate(data: CreateThreadSchemaDTO) {
+  async function onCreate(data: CreateReplySchemaDTO) {
     await mutateAsync(data);
     reset();
-    setPreview('');
+
     setIsOpen(false);
   }
 
-  function HandlePreview(e: React.ChangeEvent<HTMLInputElement>) {
-    if (e.target.files) {
-      const file = e.target.files[0];
-      const url = URL.createObjectURL(file);
-      setPreview(url);
-    }
-  }
   return (
     <DialogRoot open={isOpen}>
       <Box
@@ -153,15 +126,6 @@ export default function CreateThread() {
           </DialogTrigger>
         </Box>
         <Box>
-          <Button
-            variant="ghost"
-            onClick={onClickFile}
-            disabled
-            cursor="disabled"
-          >
-            <Image src={galleryAddLogo} width="27px" />
-          </Button>
-          <Input type="file" hidden ref={inputFileRef} />
           <Button
             width="63px"
             color="white"
@@ -209,7 +173,6 @@ export default function CreateThread() {
                     {...register('content')}
                   />
                   <Image
-                    src={preview ?? ''}
                     maxWidth={'300px'}
                     maxHeight={'300px'}
                     objectFit={'contain'}
@@ -222,22 +185,6 @@ export default function CreateThread() {
           </DialogBody>
 
           <DialogFooter display="flex" justifyContent="space-between">
-            <Button variant="ghost" onClick={onClickFile}>
-              <Image src={galleryAddLogo} width="27px" />
-            </Button>
-            <Input
-              type="file"
-              onChange={(e) => {
-                HandlePreview(e);
-                registerImageOnChange(e);
-              }}
-              hidden
-              {...resRegisterImages}
-              ref={(e) => {
-                registerImagesRef(e);
-                inputFileRef.current = e;
-              }}
-            />
             <Button
               width="63px"
               color="white"
@@ -245,9 +192,8 @@ export default function CreateThread() {
               backgroundColor="brand.500"
               fontWeight="bold"
               type="submit"
-              loading={isPending}
             >
-              {isPending ? <Spinner /> : 'Post'}
+              Post
             </Button>
           </DialogFooter>
         </form>

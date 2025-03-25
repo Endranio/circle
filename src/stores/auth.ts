@@ -1,5 +1,5 @@
-import { ProfileEntity } from '@/entities/profile-entitiy';
-import { UserEntity } from '@/entities/user-entitiy';
+import { ProfileEntity } from '@/entities/profile-entity';
+import { UserEntity } from '@/entities/user-entity';
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 

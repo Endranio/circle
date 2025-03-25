@@ -1,20 +1,13 @@
 import { api } from '@/libs/api';
 import { Box, Spinner, Text } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
-import { CardThread } from './card-thread';
-import CreateThread from './create-thread';
+
 import { ThreadEntity } from '@/entities/thread-entity';
+import { CardThread } from '@/features/home/components/card-thread';
+import { useParams } from 'react-router-dom';
 
-export function Home() {
-  // const [threads, setThreads] = useState([]);
-
-  // async function getThreads() {
-  //   const response = await api.get('/threads');
-  //   setThreads((response as any).data);
-  // }
-  // useEffect(() => {
-  //   getThreads();
-  // }, []);
+export function AltPost() {
+  const { id } = useParams();
 
   const {
     data: threads,
@@ -24,14 +17,13 @@ export function Home() {
   } = useQuery<ThreadEntity[]>({
     queryKey: ['threads'],
     queryFn: async () => {
-      const response = await api.get('/threads');
+      const response = await api.get(`/threads/user/${id}`);
       return response.data;
     },
   });
 
   return (
     <Box>
-      <CreateThread />
       {isError && <Text color={'red'}>{failureReason?.message}</Text>}
       {isLoading ? (
         <Box display={'flex'} justifyContent={'center'} paddingY={50}>

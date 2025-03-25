@@ -23,7 +23,7 @@ export const forgotSchema = z.object({
 export type ForgotPasswordSchemaDTO = z.infer<typeof forgotSchema>;
 
 export const resetSchema = z.object({
-  oldpassword: z.string().min(6),
+  confirmpassword: z.string().min(6),
   newpassword: z.string().min(6),
 });
 

@@ -1,35 +1,38 @@
-import { InputGroup } from '@/components/ui/input-group';
-import { Box, Image, Input } from '@chakra-ui/react';
 import { SearchOutline } from '@/assets/icons/index';
-import { SearchUserCard } from './search-user-card';
-import { SearchUserDatas } from '@/utils/dummy/searchs';
+import { InputGroup } from '@/components/ui/input-group';
+import { api } from '@/libs/api';
+import { Box, Image, Input, Spinner } from '@chakra-ui/react';
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useDebounce } from 'use-debounce';
-import { UserCardSkeleton } from '@/components/skeletons/user-card-skeleton';
 import { SearchUser } from '../type/search-user';
+import { SearchUserCard } from './search-user-card';
 
 export function SearchUsers() {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [searchText, setSearchText] = useState<string>('');
   const [searchTextDebounce] = useDebounce(searchText, 1000);
-  const [searchUserInterval, setSearchUserInterval] = useState<SearchUser[]>(
-    []
-  );
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setSearchText(e.target.value);
   }
 
-  function getSearchUser() {
-    setTimeout(() => {
-      setSearchUserInterval(SearchUserDatas);
-      setIsLoading(false);
-    }, 3000);
-  }
+  const {
+    data: users,
+    isLoading,
+    refetch,
+  } = useQuery<SearchUser[]>({
+    queryKey: ['search-users'],
+    queryFn: async () => {
+      const response = await api.get(
+        `/users/search?search=${searchTextDebounce}`
+      );
+      return response.data;
+    },
+  });
 
   useEffect(() => {
-    getSearchUser();
-  }, []);
+    refetch();
+  }, [searchTextDebounce, refetch]);
 
   return (
     <Box>
@@ -46,28 +49,15 @@ export function SearchUsers() {
         />
       </InputGroup>
 
-      {isLoading &&
-        Array(SearchUserDatas.length)
-          .fill(0)
-          .map((_, index) => <UserCardSkeleton key={index} />)}
-
-      {searchUserInterval
-        .filter((SearchUserData) => {
-          const searchQuery = searchTextDebounce.toLowerCase().trim();
-          return (
-            SearchUserData.fullname
-              .toLowerCase()
-              .trim()
-              .includes(searchQuery) ||
-            SearchUserData.username.toLowerCase().trim().includes(searchQuery)
-          );
-        })
-        .map((SearchUserData) => (
-          <SearchUserCard
-            SearchUserData={SearchUserData}
-            key={SearchUserData.id}
-          />
-        ))}
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <>
+          {users?.map((user) => (
+            <SearchUserCard SearchUserData={user} key={user.id} />
+          ))}
+        </>
+      )}
     </Box>
   );
 }

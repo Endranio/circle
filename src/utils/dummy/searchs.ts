@@ -3,63 +3,56 @@ import { SearchUser } from '@/features/search/type/search-user';
 export const SearchUserDatas: SearchUser[] = [
   {
     id: '550e8400-e29b-41d4-a716-446655440000',
-    fullname: 'Monkey D. Luffy',
+    email: 'luffy@onepiece.com',
     username: 'luffy_gear5',
-    avatarUrl:
-      'https://api.dicebear.com/9.x/notionists-neutral/svg?seed=Monkey%20D.%20Luffy',
-    bio: 'Pirate King',
-    isFollow: true,
+    password: 'dummyPassword', // Karena wajib di UserEntity
+    createdAt: '2025-02-28T10:00:00Z',
+    updatedAt: '2025-02-28T10:00:00Z',
+    profile: {
+      id: '550e8400-e29b-41d4-a716',
+      fullname: 'Monkey D. Luffy',
+      avatarUrl:
+        'https://api.dicebear.com/9.x/notionists-neutral/svg?seed=Monkey%20D.%20Luffy',
+      bannerUrl: null,
+      bio: 'Pirate King',
+      createdAt: '2025-02-28T10:00:00Z',
+      updatedAt: '2025-02-28T10:00:00Z',
+    },
   },
   {
     id: '550e8400-e29b-41d4-a716-446655440001',
-    fullname: 'Roronoa Zoro',
+    email: 'zoro@onepiece.com',
     username: 'zoro_santoryu',
-    avatarUrl:
-      'https://api.dicebear.com/9.x/notionists-neutral/svg?seed=Roronoa%20Zoro',
-    bio: 'Future Greatest Swordsman',
-    isFollow: false,
+    password: 'dummyPassword',
+    createdAt: '2025-02-28T10:00:00Z',
+    updatedAt: '2025-02-28T10:00:00Z',
+    profile: {
+      id: '550e8400-e29b-41d4-a717',
+      fullname: 'Roronoa Zoro',
+      avatarUrl:
+        'https://api.dicebear.com/9.x/notionists-neutral/svg?seed=Roronoa%20Zoro',
+      bannerUrl: null,
+      bio: 'Future Greatest Swordsman',
+      createdAt: '2025-02-28T10:00:00Z',
+      updatedAt: '2025-02-28T10:00:00Z',
+    },
   },
   {
     id: '550e8400-e29b-41d4-a716-446655440002',
-    fullname: 'Nami',
+    email: 'nami@onepiece.com',
     username: 'nami_catburglar',
-    avatarUrl: 'https://api.dicebear.com/9.x/notionists-neutral/svg?seed=Nami',
-    bio: 'Navigator of the Straw Hats',
-    isFollow: true,
-  },
-  {
-    id: '550e8400-e29b-41d4-a716-446655440003',
-    fullname: 'Usopp',
-    username: 'usopp_god',
-    avatarUrl: 'https://api.dicebear.com/9.x/notionists-neutral/svg?seed=Usopp',
-    bio: 'Brave Warrior of the Sea',
-    isFollow: false,
-  },
-  {
-    id: '550e8400-e29b-41d4-a716-446655440004',
-    fullname: 'Vinsmoke Sanji',
-    username: 'sanji_blackleg',
-    avatarUrl:
-      'https://api.dicebear.com/9.x/notionists-neutral/svg?seed=Vinsmoke%20Sanji',
-    bio: 'The Cook of Straw Hat Pirates',
-    isFollow: true,
-  },
-  {
-    id: '550e8400-e29b-41d4-a716-446655440005',
-    fullname: 'Tony Tony Chopper',
-    username: 'chopper_tanuki',
-    avatarUrl:
-      'https://api.dicebear.com/9.x/notionists-neutral/svg?seed=Tony%20Tony%20Chopper',
-    bio: 'Doctor of the Straw Hats',
-    isFollow: true,
-  },
-  {
-    id: '550e8400-e29b-41d4-a716-446655440006',
-    fullname: 'Nico Robin',
-    username: 'robin_poneglyph',
-    avatarUrl:
-      'https://api.dicebear.com/9.x/notionists-neutral/svg?seed=Nico%20Robin',
-    bio: 'Archaeologist of the Straw Hats',
-    isFollow: false,
+    password: 'dummyPassword',
+    createdAt: '2025-02-28T10:00:00Z',
+    updatedAt: '2025-02-28T10:00:00Z',
+    profile: {
+      id: '550e8400-e29b-41d4-a718',
+      fullname: 'Nami',
+      avatarUrl:
+        'https://api.dicebear.com/9.x/notionists-neutral/svg?seed=Nami',
+      bannerUrl: null,
+      bio: 'Navigator of the Straw Hats',
+      createdAt: '2025-02-28T10:00:00Z',
+      updatedAt: '2025-02-28T10:00:00Z',
+    },
   },
 ];

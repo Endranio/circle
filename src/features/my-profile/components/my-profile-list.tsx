@@ -1,4 +1,6 @@
 import { Tabs } from '@chakra-ui/react';
+import { AltPost } from './profile-altpost';
+import { Media } from './profile-media';
 
 export function List() {
   return (
@@ -21,8 +23,12 @@ export function List() {
           Media
         </Tabs.Trigger>
       </Tabs.List>
-      <Tabs.Content value="members">AltPost</Tabs.Content>
-      <Tabs.Content value="projects">Media</Tabs.Content>
+      <Tabs.Content value="members">
+        <AltPost />
+      </Tabs.Content>
+      <Tabs.Content value="projects">
+        <Media />
+      </Tabs.Content>
     </Tabs.Root>
   );
 }
