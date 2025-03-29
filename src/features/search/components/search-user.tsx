@@ -54,7 +54,12 @@ export function SearchUsers() {
       ) : (
         <>
           {users?.map((user) => (
-            <SearchUserCard SearchUserData={user} key={user.id} />
+            <SearchUserCard
+              SearchUserData={user}
+              isFollow={user.isFollow}
+              id={user.id}
+              key={user.id}
+            />
           ))}
         </>
       )}

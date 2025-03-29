@@ -1,15 +1,75 @@
 import { Avatar } from '@/components/ui/avatar';
-import { Box, BoxProps, Button, Text } from '@chakra-ui/react';
+import { Box, Button, Text } from '@chakra-ui/react';
 
-import { useReducer } from 'react';
-import { SearchUser } from '../search/type/search-user';
+import { toaster } from '@/components/ui/toaster';
+import { api } from '@/libs/api';
+import { useAuthStore } from '@/stores/auth';
+import {
+  CreateFollowSchemaDTO,
+  DeleteFollowSchemaDTO,
+} from '@/utils/schemas/follow-schemas';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+import { FollowResponse } from './type/follow-response';
+import { FollowingEntity } from './type/follows';
 
-interface SearchUserCardProps extends BoxProps {
-  SearchUserData: SearchUser;
-}
+export function Following({ following, isFollow }: FollowingEntity) {
+  const { user } = useAuthStore();
+  const queryClient = useQueryClient();
+  const followingId = following.id;
+  const followedId = user.id;
 
-export function Following({ SearchUserData, ...props }: SearchUserCardProps) {
-  const [, forceUpdate] = useReducer((state) => state + 1, 0);
+  const { isPending: isPendingUnfollow, mutateAsync: mutateFollow } =
+    useMutation<FollowResponse, Error, CreateFollowSchemaDTO>({
+      mutationKey: ['Follows'],
+      mutationFn: async (data: CreateFollowSchemaDTO) => {
+        const response = await api.post<FollowResponse>('/follows', data);
+        return response.data;
+      },
+      onError: (error) => {
+        if (axios.isAxiosError(error)) {
+          return toaster.create({
+            title: error.response?.data.message,
+            type: 'error',
+          });
+        }
+        toaster.create({ title: `Something went wrong`, type: 'error' });
+      },
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({ queryKey: ['following-users'] });
+      },
+    });
+
+  const { isPending: isPendingFollow, mutateAsync: mutateUnFollow } =
+    useMutation<FollowResponse, Error, DeleteFollowSchemaDTO>({
+      mutationKey: ['UnFollows'],
+      mutationFn: async (data: DeleteFollowSchemaDTO) => {
+        const response = await api.delete(
+          `/follows/${followedId}/${followingId}`,
+          { data }
+        );
+        return response.data;
+      },
+      onError: (error) => {
+        if (axios.isAxiosError(error)) {
+          return toaster.create({
+            title: error.response?.data.message,
+            type: 'error',
+          });
+        }
+        toaster.create({ title: `Something went wrong`, type: 'error' });
+      },
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({ queryKey: ['following-users'] });
+      },
+    });
+
+  async function onFollow(data: CreateFollowSchemaDTO) {
+    await mutateFollow(data);
+  }
+  async function unFollow(data: DeleteFollowSchemaDTO) {
+    await mutateUnFollow(data);
+  }
 
   return (
     <Box
@@ -18,11 +78,13 @@ export function Following({ SearchUserData, ...props }: SearchUserCardProps) {
       borderColor={'outline'}
       padding={'16px 0'}
       //   justifyContent={"space-between"}
-      {...props}
     >
       <Avatar
-        name={SearchUserData.fullname}
-        src={SearchUserData.avatarUrl}
+        name={following.profile.fullname}
+        src={
+          following.profile.avatarUrl ||
+          `https://api.dicebear.com/9.x/notionists-neutral/svg?seed=${following.profile.fullname}`
+        }
         shape="full"
         size="full"
         width={'50px'}
@@ -30,10 +92,10 @@ export function Following({ SearchUserData, ...props }: SearchUserCardProps) {
       />
 
       <Box display={'flex'} flexDirection={'column'} gap={'4px'} flex={'7'}>
-        <Text fontWeight={'bold'}>{SearchUserData.fullname}</Text>
-        <Text color={'secondary'}>@{SearchUserData.username}</Text>
+        <Text fontWeight={'bold'}>{following.profile.fullname}</Text>
+        <Text color={'secondary'}>@{following.username}</Text>
 
-        <Text cursor={'pointer'}>{SearchUserData.bio}</Text>
+        <Text cursor={'pointer'}>{following.profile.bio}</Text>
       </Box>
 
       <Button
@@ -42,12 +104,14 @@ export function Following({ SearchUserData, ...props }: SearchUserCardProps) {
         variant={'outline'}
         border={'1px solid white'}
         marginY={'auto'}
-        onClick={() => {
-          SearchUserData.isFollow = !SearchUserData.isFollow;
-          forceUpdate();
-        }}
+        disabled={isPendingFollow || isPendingUnfollow}
+        onClick={() =>
+          isFollow
+            ? unFollow({ followingId: following.id, followedId: user.id })
+            : onFollow({ followingId: following.id, followedId: user.id })
+        }
       >
-        {SearchUserData.isFollow ? 'Unfollow' : 'Follow'}
+        {isFollow ? 'Unfollow' : 'Follow'}
       </Button>
     </Box>
   );

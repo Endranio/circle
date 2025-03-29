@@ -44,7 +44,7 @@ export const NAV_LINK_MENU = (): NavLinkMenu[] => {
         full: HeartLogo,
         outline: HeartOutline,
       },
-      path: '/follows',
+      path: `/follows/${user.id}`,
     },
     {
       label: 'Profile',

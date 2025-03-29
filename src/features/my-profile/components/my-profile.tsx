@@ -1,13 +1,15 @@
 import { InputImage, LeftArrow } from '@/assets/icons';
 import { Avatar } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import { toaster } from '@/components/ui/toaster';
 import { UserEntity } from '@/entities/user-entity';
+import { ProfileResonse } from '@/features/profile/dto/profile';
 import { api } from '@/libs/api';
+import { useAuthStore } from '@/stores/auth';
 import {
   updateProfileSchema,
   UpdateProfileSchemaDTO,
 } from '@/utils/schemas/profile-schema';
-import { userSession } from '@/utils/sesions/sesion';
 import {
   Box,
   CloseButton,
@@ -27,9 +29,6 @@ import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { List } from './my-profile-list';
-import { Button } from '@/components/ui/button';
-import { useAuthStore } from '@/stores/auth';
-import { ProfileResonse } from '@/features/profile/dto/profile';
 
 export function MyProfile(user: UserEntity) {
   const navigate = useNavigate();
@@ -374,7 +373,7 @@ export function MyProfile(user: UserEntity) {
               fontWeight={'bold'}
               color={'white'}
             >
-              {userSession.followingsCount}
+              {userdata?.followingsCount}
             </Text>
             <Text marginRight={'12px'}>Following</Text>
 
@@ -384,7 +383,7 @@ export function MyProfile(user: UserEntity) {
               fontWeight={'bold'}
               color={'white'}
             >
-              {userSession.followersCount}
+              {userdata?.followersCount}
             </Text>
             <Text>Followers </Text>
           </Box>

@@ -1,18 +1,62 @@
 import { Tabs } from '@chakra-ui/react';
 
-import { SearchUserDatas } from '@/utils/dummy/searchs';
+import { api } from '@/libs/api';
+import { useQuery } from '@tanstack/react-query';
+import { useParams } from 'react-router-dom';
 import { Followers } from './follower-list';
 import { Following } from './following-list';
+import { FollowerEntity, FollowingEntity } from './type/follows';
+
+import { useState } from 'react';
 
 export function Follow() {
+  const { id } = useParams();
+  const [activeTab, setActiveTab] = useState('Following');
+  const {
+    data: follows,
+    // isLoading : LoadingFollower,
+    refetch: refetchFollower,
+  } = useQuery<FollowerEntity[]>({
+    queryKey: ['follower-users'],
+    queryFn: async () => {
+      const response = await api.get(`/follows/follower/${id}`);
+      return response.data;
+    },
+    enabled: activeTab === 'Follower',
+  });
+  const {
+    data: following,
+    // isLoading : LoadingFollowing,
+    refetch: refetchFollowing,
+  } = useQuery<FollowingEntity[]>({
+    queryKey: ['following-users'],
+    queryFn: async () => {
+      const response = await api.get(`/follows/following/${id}`);
+      return response.data;
+    },
+    enabled: activeTab === 'Following',
+  });
+
   return (
-    <Tabs.Root defaultValue="members">
+    <Tabs.Root
+      defaultValue="Following"
+      onValueChange={(details) => {
+        const tabValue = typeof details === 'string' ? details : details.value;
+        setActiveTab(tabValue);
+
+        if (tabValue === 'Following') {
+          refetchFollowing();
+        } else if (tabValue === 'Followers') {
+          refetchFollower();
+        }
+      }}
+    >
       <Tabs.List display={'flex'}>
         <Tabs.Trigger
           flex={'1'}
           fontSize={'16px'}
           justifyContent={'center'}
-          value="members"
+          value="Following"
         >
           Following
         </Tabs.Trigger>
@@ -20,20 +64,24 @@ export function Follow() {
           flex={'1'}
           fontSize={'16px'}
           justifyContent={'center'}
-          value="projects"
+          value="Follower"
         >
           Followers
         </Tabs.Trigger>
       </Tabs.List>
-      <Tabs.Content value="members">
-        {SearchUserDatas.map((SearchUserData) => (
-          <Followers key={SearchUserData.id} SearchUserData={SearchUserData} />
+      <Tabs.Content value="Following">
+        {following?.map(({ id, following, isFollow }) => (
+          <Following
+            key={id}
+            id={id}
+            following={following}
+            isFollow={isFollow}
+          />
         ))}
       </Tabs.Content>
-      <Tabs.Content value="projects">
-        {' '}
-        {SearchUserDatas.map((SearchUserData) => (
-          <Following key={SearchUserData.id} SearchUserData={SearchUserData} />
+      <Tabs.Content value="Follower">
+        {follows?.map(({ id, follower, isFollow }) => (
+          <Followers key={id} id={id} follower={follower} isFollow={isFollow} />
         ))}
       </Tabs.Content>
     </Tabs.Root>

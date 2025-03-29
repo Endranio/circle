@@ -153,6 +153,8 @@ function RightBar(props: BoxProps) {
   const { pathname } = useLocation();
   const {
     username,
+    followersCount,
+    followingsCount,
     profile: { fullname, bio, bannerUrl, avatarUrl },
   } = useAuthStore((state) => state.user);
 
@@ -222,7 +224,7 @@ function RightBar(props: BoxProps) {
                   fontWeight={'bold'}
                   color={'white'}
                 ></Text>
-                <Text marginRight={'12px'}>Following</Text>
+                <Text marginRight={'12px'}> {followersCount} Following</Text>
 
                 <Text
                   marginRight={'4px'}
@@ -230,7 +232,7 @@ function RightBar(props: BoxProps) {
                   fontWeight={'bold'}
                   color={'white'}
                 ></Text>
-                <Text>Followers </Text>
+                <Text> {followingsCount} Followers</Text>
               </Box>
             </Card.Body>
           </Card.Root>

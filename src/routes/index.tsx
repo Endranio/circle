@@ -26,7 +26,7 @@ export const router = createBrowserRouter([
         element: <SearchUserPage />,
       },
       {
-        path: '/follows',
+        path: '/follows/:id',
         element: <FollowsPage />,
       },
       {
