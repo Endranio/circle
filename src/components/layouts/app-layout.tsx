@@ -1,9 +1,9 @@
 import circlesvg from '@/assets/circle.svg';
 import { Logout } from '@/assets/icons';
+import { UserEntity } from '@/entities/user-entity';
 import { api } from '@/libs/api';
 import { useAuthStore } from '@/stores/auth';
 import { NAV_LINK_MENU } from '@/utils/constants/nav-link';
-import { SearchUserDatas } from '@/utils/dummy/searchs';
 import {
   Box,
   BoxProps,
@@ -26,7 +26,7 @@ import {
 } from 'react-router-dom';
 import { Avatar } from '../ui/avatar';
 import { Footer } from './footer';
-import { Suggest } from './suggest';
+import { SuggestCard } from './suggest-card';
 
 export function AppLayout() {
   const {
@@ -84,7 +84,7 @@ function LeftBar(props: BoxProps) {
   return (
     <Box
       width={'417px'}
-      height={'auto'}
+      minHeight={'100vh'}
       padding={'40px'}
       gap={'16px'}
       borderRight={'1px solid'}
@@ -159,6 +159,15 @@ function RightBar(props: BoxProps) {
   } = useAuthStore((state) => state.user);
 
   const { user } = useAuthStore();
+
+  const { data: suggest } = useQuery<UserEntity[]>({
+    queryKey: ['suggest-users'],
+    queryFn: async () => {
+      const response = await api.get(`/users`);
+      return response.data;
+    },
+  });
+
   return (
     <Box
       width={'563px'}
@@ -247,9 +256,9 @@ function RightBar(props: BoxProps) {
           {' '}
           Suggested Users{' '}
         </Heading>
-        {SearchUserDatas.slice(0, 5).map((SearchUserData) => (
-          <Suggest key={SearchUserData.id} SearchUserData={SearchUserData} />
-        ))}
+        {suggest
+          ?.slice(0, 5)
+          .map((suggest) => <SuggestCard key={suggest.id} {...suggest} />)}
       </Box>
 
       <Box borderRadius={'lg'} backgroundColor={'rightBar'}>

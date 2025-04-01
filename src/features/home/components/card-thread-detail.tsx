@@ -12,6 +12,7 @@ import {
 import { Box, Button, Image, Text } from '@chakra-ui/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
+import { formatDistanceToNowStrict } from 'date-fns';
 import { useParams } from 'react-router-dom';
 
 export function CardThreadDetail(thread: ThreadEntity) {
@@ -123,7 +124,7 @@ export function CardThreadDetail(thread: ThreadEntity) {
             objectFit={'contain'}
           />
           <Text color={'secondary'}>
-            {new Date(thread.createdAt).getHours()}h
+            {formatDistanceToNowStrict(new Date(thread.createdAt))}
           </Text>
         </Box>
         <Box display={'flex'}>

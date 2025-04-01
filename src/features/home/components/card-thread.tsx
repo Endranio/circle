@@ -37,6 +37,7 @@ import { useNavigate } from 'react-router-dom';
 import galleryAddLogo from '@/assets/icons/gallery-add.svg';
 import { LikeResponse } from '@/features/like/dto/like-response';
 import { ThreadResponse } from '@/features/thread/dto/thread';
+import { formatDistanceToNowStrict } from 'date-fns';
 
 export function CardThread(thread: ThreadEntity) {
   const navigate = useNavigate();
@@ -246,7 +247,7 @@ export function CardThread(thread: ThreadEntity) {
             <Text color={'secondary'}>@{thread.user?.username}</Text>
             <Text color={'secondary'}>•</Text>
             <Text color={'secondary'}>
-              {new Date(thread.createdAt).getHours()}h
+              {formatDistanceToNowStrict(new Date(thread.createdAt))}
             </Text>
           </Flex>
           {user.id === thread.userId && (

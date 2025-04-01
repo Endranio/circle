@@ -10,7 +10,6 @@ import { ReplyEntity } from '@/entities/reply-entity';
 
 export function PostDetail() {
   const { threadId } = useParams();
-  // const postData = postDatas.find((post) => post.id === id)!;
 
   const { data: thread, isLoading } = useQuery<ThreadEntity>({
     queryKey: [`threads/${threadId}`],
@@ -20,7 +19,7 @@ export function PostDetail() {
     },
   });
   const { data: replies } = useQuery<ReplyEntity[]>({
-    queryKey: [`replies/${threadId}`],
+    queryKey: [`replies`],
     queryFn: async () => {
       const response = await api.get(`/replies/${threadId}`);
       return response.data;

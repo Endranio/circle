@@ -1,38 +1,23 @@
-import { Avatar } from '@/components/ui/avatar';
-import { toaster } from '@/components/ui/toaster';
-import { FollowResponse } from '@/features/follow/type/follow-response';
-import { api } from '@/libs/api';
+import { UserEntity } from '@/entities/user-entity';
+import { Box, Button, Text } from '@chakra-ui/react';
+import { Avatar } from '../ui/avatar';
 import { useAuthStore } from '@/stores/auth';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   CreateFollowSchemaDTO,
   DeleteFollowSchemaDTO,
 } from '@/utils/schemas/follow-schemas';
-import { Box, BoxProps, Button, Text } from '@chakra-ui/react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { FollowResponse } from '@/features/follow/type/follow-response';
+import { api } from '@/libs/api';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { SearchUser } from '../type/search-user';
+import { toaster } from '../ui/toaster';
 
-interface SearchUserCardProps extends BoxProps {
-  SearchUserData: SearchUser;
-  isFollow: boolean;
-}
-
-export function SearchUserCard({
-  isFollow,
-  SearchUserData,
-  ...props
-}: SearchUserCardProps) {
-  const navigate = useNavigate();
+export function SuggestCard(suggest: UserEntity) {
   const { user } = useAuthStore();
   const queryClient = useQueryClient();
-  const followingId = SearchUserData.id;
+  const followingId = suggest.id;
 
   const followedId = user?.id;
-
-  const handleUserClick = (user: SearchUser) => {
-    navigate(`/profile/${user.id}`);
-  };
 
   const { mutateAsync: mutateFollow } = useMutation<
     FollowResponse,
@@ -54,7 +39,7 @@ export function SearchUserCard({
       toaster.create({ title: `Something went wrong`, type: 'error' });
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['search-users'] });
+      await queryClient.invalidateQueries({ queryKey: ['suggest-users'] });
       await queryClient.invalidateQueries({ queryKey: ['check'] });
     },
   });
@@ -82,7 +67,7 @@ export function SearchUserCard({
       toaster.create({ title: `Something went wrong`, type: 'error' });
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['search-users'] });
+      await queryClient.invalidateQueries({ queryKey: ['suggest-users'] });
       await queryClient.invalidateQueries({ queryKey: ['check'] });
     },
   });
@@ -98,44 +83,40 @@ export function SearchUserCard({
     <Box
       display={'flex'}
       gap={'16px'}
+      paddingBottom={'16px'}
       borderColor={'outline'}
-      padding={'16px 0'}
-      {...props}
+      paddingX={'24px'}
     >
       <Avatar
-        onClick={() => handleUserClick(SearchUserData)}
-        name={SearchUserData.profile.fullname}
+        name={suggest.profile?.fullname}
         src={
-          SearchUserData.profile.avatarUrl ??
-          `https://api.dicebear.com/9.x/notionists-neutral/svg?seed=${SearchUserData.profile.fullname}`
+          suggest.profile?.avatarUrl ??
+          `https://api.dicebear.com/9.x/notionists-neutral/svg?seed=${suggest.profile?.fullname}`
         }
         shape="full"
-        size="full"
-        width={'50px'}
-        height={'50px'}
+        width={'45px'}
       />
 
-      <Box display={'flex'} flexDirection={'column'} gap={'4px'} flex={'7'}>
-        <Text fontWeight={'bold'}>{SearchUserData.profile.fullname}</Text>
-        <Text color={'secondary'}>@{SearchUserData.username}</Text>
-
-        <Text cursor={'pointer'}>{SearchUserData.profile.bio}</Text>
+      <Box display={'flex'} flexDirection={'column'} flex={'264'}>
+        <Text fontWeight={'bold'}>{suggest.profile?.fullname}</Text>
+        <Text color={'secondary'}>@{suggest.username}</Text>
       </Box>
 
       <Button
-        flex={'1'}
+        flex={'99'}
         borderRadius={'full'}
         variant={'outline'}
         border={'1px solid white'}
+        marginY={'auto'}
         onClick={() => {
-          if (isFollow) {
-            unFollow({ followingId: SearchUserData.id, followedId: user.id });
+          if (suggest.isFollow) {
+            unFollow({ followingId: suggest.id, followedId: user.id });
           } else {
-            onFollow({ followingId: SearchUserData.id, followedId: user.id });
+            onFollow({ followingId: suggest.id, followedId: user.id });
           }
         }}
       >
-        {isFollow ? 'Unfollow' : 'Follow'}
+        {suggest.isFollow ? 'Unfollow' : 'Follow'}
       </Button>
     </Box>
   );

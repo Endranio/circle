@@ -6,8 +6,12 @@ export interface UserEntity {
   username: string;
   password: string;
   profile?: ProfileEntity;
+  _count?: {
+    followings: number;
+  };
   followersCount: number;
   followingsCount: number;
+  isFollow: boolean;
   createdAt: string;
   updatedAt: string;
 }

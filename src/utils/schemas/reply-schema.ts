@@ -5,3 +5,8 @@ export const createReplySchema = z.object({
 });
 
 export type CreateReplySchemaDTO = z.infer<typeof createReplySchema>;
+export const deleteReplySchema = z.object({
+  id: z.string().uuid(),
+});
+
+export type DeleteReplySchemaDTO = z.infer<typeof deleteReplySchema>;

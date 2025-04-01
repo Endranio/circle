@@ -3,19 +3,20 @@ import { Avatar } from '@/components/ui/avatar';
 import { toaster } from '@/components/ui/toaster';
 import { ReplyEntity } from '@/entities/reply-entity';
 import { LikeResponse } from '@/features/like/dto/like-response';
+import { ReplyResponse } from '@/features/reply/dto/reply-response';
 import { api } from '@/libs/api';
 import {
   CreateLikeSchemaDTO,
   DeleteLikeSchemaDTO,
 } from '@/utils/schemas/like-schema';
+import { DeleteReplySchemaDTO } from '@/utils/schemas/reply-schema';
 import { Box, Button, Image, Text } from '@chakra-ui/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { formatDistanceToNowStrict } from 'date-fns';
 
 export function CardReply(reply: ReplyEntity) {
   const queryClient = useQueryClient();
-  const { threadId } = useParams();
 
   const { isPending: isPendingUnlike, mutateAsync: mutateLike } = useMutation<
     LikeResponse,
@@ -39,7 +40,7 @@ export function CardReply(reply: ReplyEntity) {
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: [`replies/${threadId}`],
+        queryKey: [`replies`],
       });
     },
   });
@@ -69,8 +70,33 @@ export function CardReply(reply: ReplyEntity) {
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: [`replies/${threadId}`],
+        queryKey: [`replies`],
       });
+    },
+  });
+
+  const { mutateAsync: mutateDelete } = useMutation<
+    ReplyResponse,
+    Error,
+    DeleteReplySchemaDTO
+  >({
+    mutationKey: ['deleteThread'],
+    mutationFn: async (data: DeleteReplySchemaDTO) => {
+      const response = await api.delete<ReplyResponse>(`/replies/${data.id}`);
+      return response.data;
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error)) {
+        return toaster.create({
+          title: error.response?.data.message,
+          type: 'error',
+        });
+      }
+      toaster.create({ title: `Something went wrong`, type: 'error' });
+    },
+    onSuccess: async () => {
+      toaster.create({ title: 'Reply deleted', type: 'success' });
+      await queryClient.invalidateQueries({ queryKey: ['replies'] });
     },
   });
 
@@ -80,6 +106,10 @@ export function CardReply(reply: ReplyEntity) {
 
   async function Unlike(data: DeleteLikeSchemaDTO) {
     mutateUnlike(data);
+  }
+
+  async function DeleteReply(data: DeleteReplySchemaDTO) {
+    await mutateDelete(data);
   }
 
   return (
@@ -102,13 +132,27 @@ export function CardReply(reply: ReplyEntity) {
         height={'50px'}
       />
 
-      <Box display={'flex'} flexDirection={'column'} gap={'4px'}>
-        <Box display={'flex'} gap={'4px'}>
-          <Text fontWeight={'bold'}>{reply.user?.profile?.fullname}</Text>
-          <Text color={'secondary'}>@{reply.user?.username}</Text>
-          <Text color={'secondary'}>•</Text>
-          <Text color={'secondary'}>{reply.createdAt}h</Text>
+      <Box display={'flex'} flexDirection={'column'} gap={'4px'} width={'100%'}>
+        <Box display={'flex'} justifyContent={'space-between'}>
+          <Box display={'flex'} gap={'4px'}>
+            <Text fontWeight={'bold'}>{reply.user?.profile?.fullname}</Text>
+            <Text color={'secondary'}>@{reply.user?.username}</Text>
+            <Text color={'secondary'}>•</Text>
+            <Text color={'secondary'}>
+              {formatDistanceToNowStrict(new Date(reply.createdAt))}
+            </Text>
+          </Box>
+          <Box>
+            <Button
+              onClick={() => DeleteReply({ id: reply.id })}
+              variant={'ghost'}
+              size={'sm'}
+            >
+              Delete
+            </Button>
+          </Box>
         </Box>
+
         <Text>{reply.content}</Text>
         <Box display={'flex'}>
           <Button

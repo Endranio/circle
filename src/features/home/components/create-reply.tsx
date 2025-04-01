@@ -76,7 +76,7 @@ export default function CreateReply() {
     },
     onSuccess: async (data) => {
       await queryClient.invalidateQueries({
-        queryKey: [`replies/${threadId}`],
+        queryKey: [`replies`],
       });
       toaster.create({
         title: data.message,
