@@ -39,8 +39,11 @@ export function SuggestCard(suggest: UserEntity) {
       toaster.create({ title: `Something went wrong`, type: 'error' });
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['suggest-users'] });
-      await queryClient.invalidateQueries({ queryKey: ['check'] });
+      await queryClient.invalidateQueries({ queryKey: ['following-users'] });
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ['suggest-users'] });
+        queryClient.invalidateQueries({ queryKey: ['check'] });
+      });
     },
   });
 

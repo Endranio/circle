@@ -14,7 +14,7 @@ export function Follow() {
   const [activeTab, setActiveTab] = useState('Following');
   const {
     data: follows,
-    // isLoading : LoadingFollower,
+
     refetch: refetchFollower,
   } = useQuery<FollowerEntity[]>({
     queryKey: ['follower-users'],
@@ -26,7 +26,7 @@ export function Follow() {
   });
   const {
     data: following,
-    // isLoading : LoadingFollowing,
+
     refetch: refetchFollowing,
   } = useQuery<FollowingEntity[]>({
     queryKey: ['following-users'],

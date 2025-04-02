@@ -30,14 +30,14 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { List } from './my-profile-list';
 
-export function MyProfile(user: UserEntity) {
+export function MyProfile({ user }: { user?: UserEntity }) {
   const navigate = useNavigate();
   const { id } = useParams();
   const [previewAvatar, setPreviewAvatar] = useState<string | null | undefined>(
-    user.profile?.avatarUrl
+    user?.profile?.avatarUrl
   );
   const [previewBanner, setPreviewBanner] = useState<string | null | undefined>(
-    user.profile?.bannerUrl
+    user?.profile?.bannerUrl
   );
   const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);

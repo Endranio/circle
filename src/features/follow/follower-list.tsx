@@ -36,6 +36,7 @@ export function Followers({ follower, isFollow }: FollowerEntity) {
       },
       onSuccess: async () => {
         await queryClient.invalidateQueries({ queryKey: ['follower-users'] });
+        await queryClient.invalidateQueries({ queryKey: ['suggest-users'] });
       },
     });
 

@@ -61,6 +61,9 @@ export function Following({ following, isFollow }: FollowingEntity) {
       },
       onSuccess: async () => {
         await queryClient.invalidateQueries({ queryKey: ['following-users'] });
+        setTimeout(() => {
+          queryClient.invalidateQueries({ queryKey: ['suggest-users'] });
+        }, 2000);
       },
     });
 
@@ -77,7 +80,6 @@ export function Following({ following, isFollow }: FollowingEntity) {
       gap={'16px'}
       borderColor={'outline'}
       padding={'16px 0'}
-      //   justifyContent={"space-between"}
     >
       <Avatar
         name={following.profile.fullname}
