@@ -1,3 +1,5 @@
+import galleryAddLogo from '@/assets/icons/gallery-add.svg';
+
 import { Avatar } from '@/components/ui/avatar';
 import {
   DialogBackdrop,
@@ -8,55 +10,80 @@ import {
   DialogHeader,
   DialogRoot,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { toaster } from '@/components/ui/toaster';
-import { ReplyResponse } from '@/features/reply/dto/reply-response';
+import { ThreadResponse } from '@/features/thread/dto/thread';
 import { api } from '@/libs/api';
 import { useAuthStore } from '@/stores/auth';
 import {
-  createReplySchema,
-  CreateReplySchemaDTO,
-} from '@/utils/schemas/reply-schema';
-import { Box, Button, Field, Image, Text, Textarea } from '@chakra-ui/react';
+  createThreadSchema,
+  CreateThreadSchemaDTO,
+} from '@/utils/schemas/thread-schema';
+import {
+  Box,
+  Button,
+  Field,
+  Image,
+  Input,
+  Spinner,
+  Textarea,
+} from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
 
-export default function CreateReply() {
-  const { threadId } = useParams();
+type CreateThreadProps = {
+  isOpen: boolean;
+  onClose: () => void;
+};
+
+export default function CreateThreadModal({
+  isOpen,
+  onClose,
+}: CreateThreadProps) {
   const {
     user: {
       profile: { avatarUrl, fullname },
     },
   } = useAuthStore();
-  const [isOpen, setIsOpen] = useState(false);
+  const [preview, setPreview] = useState<string | null>(null);
+  const inputFileRef = useRef<HTMLInputElement | null>(null);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<CreateReplySchemaDTO>({
+  } = useForm<CreateThreadSchemaDTO>({
     mode: 'onChange',
-    resolver: zodResolver(createReplySchema),
+    resolver: zodResolver(createThreadSchema),
   });
 
+  const {
+    ref: registerImagesRef,
+    onChange: registerImageOnChange,
+    ...resRegisterImages
+  } = register('images');
+
+  function onClickFile() {
+    inputFileRef?.current?.click();
+  }
+
   const queryClient = useQueryClient();
-  const { mutateAsync } = useMutation<
-    ReplyResponse,
+  const { mutateAsync, isPending } = useMutation<
+    ThreadResponse,
     Error,
-    CreateReplySchemaDTO
+    CreateThreadSchemaDTO
   >({
-    mutationKey: ['create-reply'],
-    mutationFn: async (data: CreateReplySchemaDTO) => {
-      const response = await api.post<ReplyResponse>(
-        `/replies/${threadId}`,
-        data
-      );
+    mutationKey: ['threads'],
+    mutationFn: async (data: CreateThreadSchemaDTO) => {
+      const formData = new FormData();
+      formData.append('content', data.content);
+      formData.append('images', data.images[0]);
+
+      const response = await api.post<ThreadResponse>('/threads', formData);
       return response.data;
     },
     onError: (error) => {
@@ -74,11 +101,9 @@ export default function CreateReply() {
     },
     onSuccess: async (data) => {
       await queryClient.invalidateQueries({
-        queryKey: [`replies`],
+        queryKey: ['threads'],
       });
-      await queryClient.invalidateQueries({
-        queryKey: [`threads/${threadId}`],
-      });
+      onClose();
       toaster.create({
         title: data.message,
         type: 'success',
@@ -86,65 +111,26 @@ export default function CreateReply() {
     },
   });
 
-  async function onCreate(data: CreateReplySchemaDTO) {
+  async function onCreate(data: CreateThreadSchemaDTO) {
     await mutateAsync(data);
     reset();
+    setPreview('');
+    onClose();
+  }
 
-    setIsOpen(false);
+  function HandlePreview(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files) {
+      const file = e.target.files[0];
+      const url = URL.createObjectURL(file);
+      setPreview(url);
+    }
   }
 
   return (
     <DialogRoot open={isOpen}>
-      <Box
-        display="flex"
-        alignItems="center"
-        gap="20px"
-        borderBottom="1px solid"
-        borderBottomColor="outline"
-        padding="20px 0px"
-        justifyContent="space-between"
-      >
-        <Box display="flex" alignItems="center" gap="20px">
-          <Avatar
-            name={fullname}
-            src={
-              avatarUrl ||
-              `https://api.dicebear.com/9.x/notionists-neutral/svg?seed=${fullname}`
-            }
-            shape="full"
-            size="full"
-            width="50px"
-            height="50px"
-          />
-          <DialogTrigger asChild>
-            <Text
-              fontSize="20px"
-              color="secondary"
-              onClick={() => setIsOpen(true)}
-            >
-              "Want to reply?"
-            </Text>
-          </DialogTrigger>
-        </Box>
-        <Box>
-          <Button
-            width="63px"
-            color="white"
-            borderRadius="50px"
-            backgroundColor="brand.500"
-            fontWeight="bold"
-            disabled
-          >
-            Reply
-          </Button>
-        </Box>
-      </Box>
-
       <DialogBackdrop />
       <DialogContent>
-        <DialogCloseTrigger
-          onClick={() => setIsOpen(false)}
-        ></DialogCloseTrigger>
+        <DialogCloseTrigger onClick={() => onClose()}></DialogCloseTrigger>
 
         <DialogHeader>
           <DialogTitle />
@@ -169,11 +155,12 @@ export default function CreateReply() {
                   <Textarea
                     resize="none"
                     border="none"
-                    placeholder="Want to reply?"
+                    placeholder="What is happening?!"
                     _placeholder={{ fontSize: '16px' }}
                     {...register('content')}
                   />
                   <Image
+                    src={preview ?? ''}
                     maxWidth={'300px'}
                     maxHeight={'300px'}
                     objectFit={'contain'}
@@ -186,6 +173,22 @@ export default function CreateReply() {
           </DialogBody>
 
           <DialogFooter display="flex" justifyContent="space-between">
+            <Button variant="ghost" onClick={onClickFile}>
+              <Image src={galleryAddLogo} width="27px" />
+            </Button>
+            <Input
+              type="file"
+              onChange={(e) => {
+                HandlePreview(e);
+                registerImageOnChange(e);
+              }}
+              hidden
+              {...resRegisterImages}
+              ref={(e) => {
+                registerImagesRef(e);
+                inputFileRef.current = e;
+              }}
+            />
             <Button
               width="63px"
               color="white"
@@ -193,8 +196,9 @@ export default function CreateReply() {
               backgroundColor="brand.500"
               fontWeight="bold"
               type="submit"
+              loading={isPending}
             >
-              Reply
+              {isPending ? <Spinner /> : 'Post'}
             </Button>
           </DialogFooter>
         </form>

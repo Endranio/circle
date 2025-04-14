@@ -14,7 +14,6 @@ export function CardMedia(thread: ThreadEntity) {
         <Image
           src={thread.images}
           maxWidth={'100%'}
-          // maxHeight={'300px'}
           objectFit={'contain'}
           borderRadius={'8px'}
           mt={'8px'}

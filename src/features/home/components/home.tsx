@@ -6,16 +6,6 @@ import CreateThread from './create-thread';
 import { ThreadEntity } from '@/entities/thread-entity';
 
 export function Home() {
-  // const [threads, setThreads] = useState([]);
-
-  // async function getThreads() {
-  //   const response = await api.get('/threads');
-  //   setThreads((response as any).data);
-  // }
-  // useEffect(() => {
-  //   getThreads();
-  // }, []);
-
   const {
     data: threads,
     isLoading,

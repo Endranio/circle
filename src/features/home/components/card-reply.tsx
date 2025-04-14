@@ -3,20 +3,23 @@ import { Avatar } from '@/components/ui/avatar';
 import { toaster } from '@/components/ui/toaster';
 import { ReplyEntity } from '@/entities/reply-entity';
 import { LikeResponse } from '@/features/like/dto/like-response';
-import { ReplyResponse } from '@/features/reply/dto/reply-response';
 import { api } from '@/libs/api';
+import { useAuthStore } from '@/stores/auth';
 import {
   CreateLikeSchemaDTO,
   DeleteLikeSchemaDTO,
 } from '@/utils/schemas/like-schema';
-import { DeleteReplySchemaDTO } from '@/utils/schemas/reply-schema';
 import { Box, Button, Image, Text } from '@chakra-ui/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { formatDistanceToNowStrict } from 'date-fns';
+import { UseDeleteReply } from '../hooks/delete-reply';
 
 export function CardReply(reply: ReplyEntity) {
   const queryClient = useQueryClient();
+  const { user } = useAuthStore();
+
+  const { DeleteReply } = UseDeleteReply();
 
   const { isPending: isPendingUnlike, mutateAsync: mutateLike } = useMutation<
     LikeResponse,
@@ -55,8 +58,6 @@ export function CardReply(reply: ReplyEntity) {
       const response = await api.delete<LikeResponse>(
         `/likes/reply/${data.replyId}`
       );
-
-      console.log(response.data);
       return response.data;
     },
     onError: (error) => {
@@ -75,41 +76,12 @@ export function CardReply(reply: ReplyEntity) {
     },
   });
 
-  const { mutateAsync: mutateDelete } = useMutation<
-    ReplyResponse,
-    Error,
-    DeleteReplySchemaDTO
-  >({
-    mutationKey: ['deleteThread'],
-    mutationFn: async (data: DeleteReplySchemaDTO) => {
-      const response = await api.delete<ReplyResponse>(`/replies/${data.id}`);
-      return response.data;
-    },
-    onError: (error) => {
-      if (axios.isAxiosError(error)) {
-        return toaster.create({
-          title: error.response?.data.message,
-          type: 'error',
-        });
-      }
-      toaster.create({ title: `Something went wrong`, type: 'error' });
-    },
-    onSuccess: async () => {
-      toaster.create({ title: 'Reply deleted', type: 'success' });
-      await queryClient.invalidateQueries({ queryKey: ['replies'] });
-    },
-  });
-
   async function Like(data: CreateLikeSchemaDTO) {
     mutateLike(data);
   }
 
   async function Unlike(data: DeleteLikeSchemaDTO) {
     mutateUnlike(data);
-  }
-
-  async function DeleteReply(data: DeleteReplySchemaDTO) {
-    await mutateDelete(data);
   }
 
   return (
@@ -143,13 +115,16 @@ export function CardReply(reply: ReplyEntity) {
             </Text>
           </Box>
           <Box>
-            <Button
-              onClick={() => DeleteReply({ id: reply.id })}
-              variant={'ghost'}
-              size={'sm'}
-            >
-              Delete
-            </Button>
+            {(user.id === reply.user?.id ||
+              user.id === reply.thread?.userId) && (
+              <Button
+                onClick={() => DeleteReply({ id: reply.id })}
+                variant={'ghost'}
+                size={'sm'}
+              >
+                Delete
+              </Button>
+            )}
           </Box>
         </Box>
 

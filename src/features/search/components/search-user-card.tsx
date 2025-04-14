@@ -1,15 +1,6 @@
 import { Avatar } from '@/components/ui/avatar';
-import { toaster } from '@/components/ui/toaster';
-import { FollowResponse } from '@/features/follow/type/follow-response';
-import { api } from '@/libs/api';
-import { useAuthStore } from '@/stores/auth';
-import {
-  CreateFollowSchemaDTO,
-  DeleteFollowSchemaDTO,
-} from '@/utils/schemas/follow-schemas';
+import { UseFollow } from '@/features/follow/hooks/use-follow';
 import { Box, BoxProps, Button, Text } from '@chakra-ui/react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { SearchUser } from '../type/search-user';
 
@@ -24,75 +15,11 @@ export function SearchUserCard({
   ...props
 }: SearchUserCardProps) {
   const navigate = useNavigate();
-  const { user } = useAuthStore();
-  const queryClient = useQueryClient();
-  const followingId = SearchUserData.id;
-
-  const followedId = user?.id;
-
   const handleUserClick = (user: SearchUser) => {
     navigate(`/profile/${user.id}`);
   };
-
-  const { mutateAsync: mutateFollow } = useMutation<
-    FollowResponse,
-    Error,
-    CreateFollowSchemaDTO
-  >({
-    mutationKey: ['Follows'],
-    mutationFn: async (data: CreateFollowSchemaDTO) => {
-      const response = await api.post('/follows', data);
-      return response.data;
-    },
-    onError: (error) => {
-      if (axios.isAxiosError(error)) {
-        return toaster.create({
-          title: error.response?.data.message,
-          type: 'error',
-        });
-      }
-      toaster.create({ title: `Something went wrong`, type: 'error' });
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['search-users'] });
-      await queryClient.invalidateQueries({ queryKey: ['check'] });
-    },
-  });
-
-  const { mutateAsync: mutateUnFollow } = useMutation<
-    FollowResponse,
-    Error,
-    DeleteFollowSchemaDTO
-  >({
-    mutationKey: ['UnFollows'],
-    mutationFn: async (data: DeleteFollowSchemaDTO) => {
-      const response = await api.delete(
-        `/follows/${followedId}/${followingId}`,
-        { data }
-      );
-      return response.data;
-    },
-    onError: (error) => {
-      if (axios.isAxiosError(error)) {
-        return toaster.create({
-          title: error.response?.data.message,
-          type: 'error',
-        });
-      }
-      toaster.create({ title: `Something went wrong`, type: 'error' });
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['search-users'] });
-      await queryClient.invalidateQueries({ queryKey: ['check'] });
-    },
-  });
-
-  async function onFollow(data: CreateFollowSchemaDTO) {
-    await mutateFollow(data);
-  }
-  async function unFollow(data: DeleteFollowSchemaDTO) {
-    await mutateUnFollow(data);
-  }
+  const { followedId, followingId, onFollow, unFollow } =
+    UseFollow(SearchUserData);
 
   return (
     <Box
@@ -129,9 +56,9 @@ export function SearchUserCard({
         border={'1px solid white'}
         onClick={() => {
           if (isFollow) {
-            unFollow({ followingId: SearchUserData.id, followedId: user.id });
+            unFollow({ followingId, followedId });
           } else {
-            onFollow({ followingId: SearchUserData.id, followedId: user.id });
+            onFollow({ followingId, followedId });
           }
         }}
       >

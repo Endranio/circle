@@ -9,7 +9,8 @@ import {
   CreateLikeSchemaDTO,
   DeleteLikeSchemaDTO,
 } from '@/utils/schemas/like-schema';
-import { Box, Button, Image, Text } from '@chakra-ui/react';
+import { Box, Image, Text, Button } from '@chakra-ui/react';
+
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { formatDistanceToNowStrict } from 'date-fns';
@@ -91,35 +92,38 @@ export function CardThreadDetail(thread: ThreadEntity) {
   return (
     <Box
       display={'flex'}
+      flexDirection={'column'}
       gap={'16px'}
       borderBottom={'1px solid'}
       borderColor={'outline'}
       padding={'16px 0'}
     >
-      <Box>
-        <Avatar
-          name={thread.user?.profile?.fullname}
-          src={
-            thread.user?.profile?.avatarUrl ||
-            `https://api.dicebear.com/9.x/notionists-neutral/svg?seed=${thread.user?.profile?.fullname}`
-          }
-          shape="full"
-          size="full"
-          width={'50px'}
-          height={'50px'}
-        />
-      </Box>
+      <Box display={'flex'} gap={'16px'}>
+        <Box>
+          <Avatar
+            name={thread.user?.profile?.fullname}
+            src={
+              thread.user?.profile?.avatarUrl ||
+              `https://api.dicebear.com/9.x/notionists-neutral/svg?seed=${thread.user?.profile?.fullname}`
+            }
+            shape="full"
+            size="full"
+            width={'50px'}
+            height={'50px'}
+          />
+        </Box>
 
-      <Box display={'flex'} flexDirection={'column'} gap={'4px'}>
-        <Box display={'flex'} gap={'4px'}>
+        <Box display={'flex'} gap={'4px'} flexDirection={'column'}>
           <Text fontWeight={'bold'}>{thread.user?.profile?.fullname}</Text>
           <Text color={'secondary'}>@{thread.user?.username}</Text>
         </Box>
-        <Box>
+      </Box>
+      <Box display={'flex'} flexDirection={'column'} gap={'4px'}>
+        <Box gap={'16px'} display={'flex'} flexDirection={'column'}>
           <Text>{thread.content}</Text>
           <Image
             src={thread.images}
-            maxWidth={'300px'}
+            maxWidth={'100%'}
             maxHeight={'300px'}
             objectFit={'contain'}
           />
@@ -127,8 +131,10 @@ export function CardThreadDetail(thread: ThreadEntity) {
             {formatDistanceToNowStrict(new Date(thread.createdAt))}
           </Text>
         </Box>
-        <Box display={'flex'}>
+        <Box display={'flex'} gap={'10px'}>
           <Button
+            padding={'0'}
+            _hover={{ backgroundColor: 'transparent' }}
             display={'flex'}
             variant={'ghost'}
             disabled={isPendingLike || isPendingUnlike}
@@ -141,7 +147,13 @@ export function CardThreadDetail(thread: ThreadEntity) {
             <Image src={thread.isLike ? LikeLogo : LikeOutline} />
             <Text>{thread.likesCount} Like</Text>
           </Button>
-          <Button variant={'ghost'} display={'flex'} gap={'4px'}>
+          <Button
+            variant={'ghost'}
+            padding={'0'}
+            _hover={{ backgroundColor: 'transparent' }}
+            display={'flex'}
+            gap={'4px'}
+          >
             <Image src={MessageText} />
             <Text>{thread.repliesCount}</Text>
             <Text>Replies</Text>

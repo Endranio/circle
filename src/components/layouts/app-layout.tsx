@@ -28,6 +28,10 @@ import { Avatar } from '../ui/avatar';
 import { Footer } from './footer';
 import { SuggestCard } from './suggest-card';
 
+import { useState } from 'react';
+import CreateThreadModal from '../modal/create-threads-modal';
+import { EditProfile } from '../modal/edit-profile-modal';
+
 export function AppLayout() {
   const {
     user: { username },
@@ -80,6 +84,8 @@ function LeftBar(props: BoxProps) {
     navigate('/login');
   }
 
+  const [ThreadModal, setThreadModal] = useState(false);
+
   const navLinks = NAV_LINK_MENU();
   return (
     <Box
@@ -122,16 +128,22 @@ function LeftBar(props: BoxProps) {
             </Link>
           </ChakraLink>
         ))}
+
         <Button
           borderRadius={'full'}
           backgroundColor={'brand.500'}
           color={'white'}
           fontSize={'20px'}
           fontWeight={'600'}
+          onClick={() => setThreadModal(true)}
         >
           {' '}
           Create Post
         </Button>
+        <CreateThreadModal
+          isOpen={ThreadModal}
+          onClose={() => setThreadModal(false)}
+        />
       </Box>
       <Box display={'flex'} gap={'10px'}>
         <Button
@@ -167,6 +179,8 @@ function RightBar(props: BoxProps) {
       return response.data;
     },
   });
+
+  const [EditProfileModal, setEditProfileModal] = useState(false);
 
   return (
     <Box
@@ -215,9 +229,14 @@ function RightBar(props: BoxProps) {
                   border={'1px solid white'}
                   variant={'outline'}
                   marginTop={'12px'}
+                  onClick={() => setEditProfileModal(true)}
                 >
                   Edit Profile
                 </Button>
+                <EditProfile
+                  isOpen={EditProfileModal}
+                  onClose={() => setEditProfileModal(false)}
+                />
               </Box>
               <Text fontSize={'24px'} color={'white'} fontWeight={'700'}>
                 {fullname}

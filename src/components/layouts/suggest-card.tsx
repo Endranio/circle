@@ -1,86 +1,10 @@
 import { UserEntity } from '@/entities/user-entity';
+import { UseFollow } from '@/features/follow/hooks/use-follow';
 import { Box, Button, Text } from '@chakra-ui/react';
 import { Avatar } from '../ui/avatar';
-import { useAuthStore } from '@/stores/auth';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  CreateFollowSchemaDTO,
-  DeleteFollowSchemaDTO,
-} from '@/utils/schemas/follow-schemas';
-import { FollowResponse } from '@/features/follow/type/follow-response';
-import { api } from '@/libs/api';
-import axios from 'axios';
-import { toaster } from '../ui/toaster';
 
 export function SuggestCard(suggest: UserEntity) {
-  const { user } = useAuthStore();
-  const queryClient = useQueryClient();
-  const followingId = suggest.id;
-
-  const followedId = user?.id;
-
-  const { mutateAsync: mutateFollow } = useMutation<
-    FollowResponse,
-    Error,
-    CreateFollowSchemaDTO
-  >({
-    mutationKey: ['Follows'],
-    mutationFn: async (data: CreateFollowSchemaDTO) => {
-      const response = await api.post('/follows', data);
-      return response.data;
-    },
-    onError: (error) => {
-      if (axios.isAxiosError(error)) {
-        return toaster.create({
-          title: error.response?.data.message,
-          type: 'error',
-        });
-      }
-      toaster.create({ title: `Something went wrong`, type: 'error' });
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['following-users'] });
-      setTimeout(() => {
-        queryClient.invalidateQueries({ queryKey: ['suggest-users'] });
-        queryClient.invalidateQueries({ queryKey: ['check'] });
-      });
-    },
-  });
-
-  const { mutateAsync: mutateUnFollow } = useMutation<
-    FollowResponse,
-    Error,
-    DeleteFollowSchemaDTO
-  >({
-    mutationKey: ['UnFollows'],
-    mutationFn: async (data: DeleteFollowSchemaDTO) => {
-      const response = await api.delete(
-        `/follows/${followedId}/${followingId}`,
-        { data }
-      );
-      return response.data;
-    },
-    onError: (error) => {
-      if (axios.isAxiosError(error)) {
-        return toaster.create({
-          title: error.response?.data.message,
-          type: 'error',
-        });
-      }
-      toaster.create({ title: `Something went wrong`, type: 'error' });
-    },
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['suggest-users'] });
-      await queryClient.invalidateQueries({ queryKey: ['check'] });
-    },
-  });
-
-  async function onFollow(data: CreateFollowSchemaDTO) {
-    await mutateFollow(data);
-  }
-  async function unFollow(data: DeleteFollowSchemaDTO) {
-    await mutateUnFollow(data);
-  }
+  const { followedId, followingId, onFollow } = UseFollow(suggest);
 
   return (
     <Box
@@ -111,15 +35,9 @@ export function SuggestCard(suggest: UserEntity) {
         variant={'outline'}
         border={'1px solid white'}
         marginY={'auto'}
-        onClick={() => {
-          if (suggest.isFollow) {
-            unFollow({ followingId: suggest.id, followedId: user.id });
-          } else {
-            onFollow({ followingId: suggest.id, followedId: user.id });
-          }
-        }}
+        onClick={() => onFollow({ followingId, followedId })}
       >
-        {suggest.isFollow ? 'Unfollow' : 'Follow'}
+        Follow
       </Button>
     </Box>
   );
