@@ -67,7 +67,12 @@ export function AppLayout() {
     return (
       <Box display={'flex'}>
         <LeftBar />
-        <Box width={'748px'} padding={'20px'}>
+        <Box
+          overflowY={'scroll'}
+          height={'170vh'}
+          width={'748px'}
+          padding={'20px'}
+        >
           <Outlet />
         </Box>
         <RightBar />
@@ -203,7 +208,11 @@ function RightBar(props: BoxProps) {
             <Card.Body color="fg.muted" gap={'4px'}>
               <Box
                 backgroundSize={'cover'}
-                backgroundImage={`url("${bannerUrl}")`}
+                backgroundImage={
+                  bannerUrl
+                    ? `url("${bannerUrl}")`
+                    : `url("https://api.dicebear.com/9.x/glass/svg?seed=${fullname}")`
+                }
                 width={'100%'}
                 height={'100px'}
                 borderRadius={'18px'}

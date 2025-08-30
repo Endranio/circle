@@ -13,7 +13,8 @@ import { Link } from 'react-router-dom';
 import { UseLoginForm } from '../hooks/use-login';
 
 export function LoginForm(props: BoxProps) {
-  const { OnSubmit, errors, handleSubmit, register } = UseLoginForm();
+  const { OnSubmit, errors, handleSubmit, register, isPending } =
+    UseLoginForm();
 
   return (
     <Box display={'flex'} flexDirection={'column'} gap={'12px'} {...props}>
@@ -41,7 +42,12 @@ export function LoginForm(props: BoxProps) {
             <Link to={'/forgot-password'}>Forgot password?</Link>
           </ChakraLink>
         </Text>
-        <Button backgroundColor={'brand.500'} color={'white'} type="submit">
+        <Button
+          backgroundColor={'brand.500'}
+          color={'white'}
+          type="submit"
+          loading={isPending}
+        >
           Login
         </Button>
       </form>

@@ -13,7 +13,8 @@ import { Link } from 'react-router-dom';
 import { UseResetPass } from '../hooks/use-reset';
 
 export function ResetPassword(props: BoxProps) {
-  const { OnSubmit, errors, handleSubmit, register } = UseResetPass();
+  const { OnSubmit, errors, handleSubmit, register, isPending } =
+    UseResetPass();
 
   return (
     <Box display={'flex'} flexDirection={'column'} gap={'12px'} {...props}>
@@ -42,7 +43,12 @@ export function ResetPassword(props: BoxProps) {
           </Field.ErrorText>
         </Field.Root>
 
-        <Button backgroundColor={'brand.500'} color={'white'} type="submit">
+        <Button
+          backgroundColor={'brand.500'}
+          color={'white'}
+          type="submit"
+          loading={isPending}
+        >
           Create New Password
         </Button>
       </form>

@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 import { UseRegister } from '../hooks/use-register';
 
 export function RegisterForm(props: BoxProps) {
-  const { OnSubmit, errors, handleSubmit, register } = UseRegister();
+  const { OnSubmit, errors, handleSubmit, register, isPending } = UseRegister();
   return (
     <Box display={'flex'} flexDirection={'column'} gap={'12px'} {...props}>
       <Image width="108px" src={circlesvg} />
@@ -43,7 +43,12 @@ export function RegisterForm(props: BoxProps) {
           <Field.ErrorText>{errors['password']?.message}</Field.ErrorText>
         </Field.Root>
 
-        <Button backgroundColor={'brand.500'} color={'white'} type="submit">
+        <Button
+          backgroundColor={'brand.500'}
+          color={'white'}
+          type="submit"
+          loading={isPending}
+        >
           Register
         </Button>
       </form>

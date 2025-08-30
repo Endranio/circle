@@ -30,7 +30,7 @@ export function UseRegister() {
 
   const navigate = useNavigate();
 
-  const { mutateAsync } = useMutation<
+  const { mutateAsync, isPending } = useMutation<
     RegisterResponse,
     Error,
     RegisterSchemaDTO
@@ -70,5 +70,6 @@ export function UseRegister() {
     handleSubmit,
     errors,
     OnSubmit,
+    isPending,
   };
 }

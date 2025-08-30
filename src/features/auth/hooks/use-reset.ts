@@ -30,7 +30,7 @@ export function UseResetPass() {
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token');
 
-  const { mutateAsync } = useMutation<
+  const { mutateAsync, isPending } = useMutation<
     ResetPasswordResponse,
     Error,
     ResetPasswordSchemaDTO
@@ -80,5 +80,6 @@ export function UseResetPass() {
     handleSubmit,
     errors,
     OnSubmit,
+    isPending,
   };
 }

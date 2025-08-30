@@ -13,7 +13,8 @@ import { Link } from 'react-router-dom';
 import { UseForgotPass } from '../hooks/use-frogot';
 
 export function ForgotPassword(props: BoxProps) {
-  const { OnSubmit, errors, handleSubmit, register } = UseForgotPass();
+  const { OnSubmit, errors, handleSubmit, register, isPending } =
+    UseForgotPass();
   return (
     <Box display={'flex'} flexDirection={'column'} gap={'12px'} {...props}>
       <Image width="108px" src={circlesvg} />
@@ -27,7 +28,12 @@ export function ForgotPassword(props: BoxProps) {
           <Field.ErrorText>{errors['email']?.message}</Field.ErrorText>
         </Field.Root>
 
-        <Button backgroundColor={'brand.500'} color={'white'} type="submit">
+        <Button
+          backgroundColor={'brand.500'}
+          color={'white'}
+          type="submit"
+          loading={isPending}
+        >
           Send
         </Button>
       </form>

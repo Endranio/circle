@@ -62,7 +62,11 @@ export function MyProfile() {
       <Box color="fg.muted">
         <Box
           backgroundSize={'cover'}
-          backgroundImage={`url("${userdata?.profile?.bannerUrl}")`}
+          backgroundImage={
+            userdata?.profile?.bannerUrl
+              ? `url("${userdata.profile.bannerUrl}")`
+              : `url("https://api.dicebear.com/9.x/glass/svg?seed=${userdata?.profile?.fullname}")`
+          }
           width={'100%'}
           height={'140px'}
           borderRadius={'18px'}
@@ -150,7 +154,7 @@ export function MyProfile() {
           </Box>
         </Box>
       </Box>
-      <Box padding={'12px'}>
+      <Box>
         <List />
       </Box>
     </Box>

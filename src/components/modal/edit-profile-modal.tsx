@@ -178,7 +178,11 @@ export function EditProfile({ isOpen, onClose }: EditProfileProps) {
                   <Box
                     position="relative"
                     backgroundSize="cover"
-                    backgroundImage={`url("${previewBanner}")`}
+                    backgroundImage={
+                      previewBanner
+                        ? `url("${previewBanner}")`
+                        : `url("https://api.dicebear.com/9.x/glass/svg?seed=${userdata?.profile?.fullname}")`
+                    }
                     width="100%"
                     height="140px"
                     borderRadius="18px"
@@ -196,7 +200,7 @@ export function EditProfile({ isOpen, onClose }: EditProfileProps) {
                       justifyContent="center"
                       _hover={{ backgroundColor: 'transparent' }}
                     >
-                      <Image src={InputImage} width={'60px'} />
+                      <Image src={InputImage} opacity={0.2} width={'30px'} />
                     </Button>
                     <Input
                       type="file"
@@ -219,7 +223,10 @@ export function EditProfile({ isOpen, onClose }: EditProfileProps) {
                         border="4px solid #1D1D1D"
                         width="80px"
                         height="80px"
-                        src={previewAvatar ?? ''}
+                        src={
+                          previewAvatar ??
+                          `https://api.dicebear.com/9.x/notionists-neutral/svg?seed=${userdata?.profile?.fullname}`
+                        }
                         shape="full"
                         size="lg"
                       />
@@ -231,7 +238,7 @@ export function EditProfile({ isOpen, onClose }: EditProfileProps) {
                         right={'50%'}
                         _hover={{ backgroundColor: 'transparent' }}
                       >
-                        <Image src={InputImage} width="37px" />
+                        <Image opacity={0.4} src={InputImage} width="20px" />
                       </Button>
                       <Input
                         type="file"

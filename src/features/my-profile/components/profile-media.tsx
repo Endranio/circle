@@ -30,7 +30,14 @@ export function Media() {
           <Spinner />
         </Box>
       ) : (
-        <Box>
+        <Box
+          display="grid"
+          gridTemplateColumns={{
+            base: '1fr',
+            md: 'repeat(2, 1fr)',
+            lg: 'repeat(3, 1fr)',
+          }}
+        >
           {threads?.map((thread) => <CardMedia {...thread} key={thread.id} />)}
         </Box>
       )}

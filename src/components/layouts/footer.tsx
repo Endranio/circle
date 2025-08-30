@@ -10,13 +10,13 @@ import { Box, Link as ChakraLink, Image, Text } from '@chakra-ui/react';
 export function Footer() {
   return (
     <Box
-      padding={'12px 16px'}
-      gap={'10px'}
+      padding={'10px 14px'}
+      gap={'8px'}
       display={'flex'}
       flexDirection={'column'}
     >
       <Box display={'flex'}>
-        <Text>
+        <Text fontSize={'13px'}>
           Develop By{' '}
           <Text as="span" fontWeight={'700'}>
             Endranio Palupi
@@ -25,16 +25,16 @@ export function Footer() {
         </Text>
         <Box display={'flex'} gap={'8px'}>
           <ChakraLink>
-            <Image src={Github} />
+            <Image boxSize="20px" src={Github} />
           </ChakraLink>
           <ChakraLink>
-            <Image src={Linkedin} />
+            <Image boxSize="16px" src={Linkedin} />
           </ChakraLink>
           <ChakraLink>
-            <Image src={Facebook} />
+            <Image boxSize="16px" src={Facebook} />
           </ChakraLink>
           <ChakraLink>
-            <Image src={Instagram} />
+            <Image boxSize="16px" src={Instagram} />
           </ChakraLink>
         </Box>
       </Box>
@@ -45,9 +45,9 @@ export function Footer() {
         color={'footer'}
         gap={2}
       >
-        <Text>Powered By</Text>
-        <Image height={'16px'} src={DumbWays} />
-        <Text>Dumways Indonesia • #1 Coding Bootcamp</Text>
+        <Text fontSize={'9px'}>Powered By</Text>
+        <Image align={'center'} height={'13px'} src={DumbWays} />
+        <Text fontSize={'9px'}>Dumways Indonesia • #1 Coding Bootcamp</Text>
       </Box>
     </Box>
   );

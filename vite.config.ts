@@ -12,6 +12,7 @@ export default defineConfig({
       '@': '/src',
     },
   },
+
   test: {
     globals: true,
     environment: 'jsdom',

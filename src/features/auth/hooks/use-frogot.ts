@@ -16,7 +16,7 @@ export function UseForgotPass() {
     resolver: zodResolver(forgotSchema),
   });
 
-  const { mutateAsync } = useMutation<
+  const { mutateAsync, isPending } = useMutation<
     { message: string },
     AxiosError,
     ForgotPasswordSchemaDTO
@@ -54,5 +54,6 @@ export function UseForgotPass() {
     handleSubmit,
     errors,
     OnSubmit,
+    isPending,
   };
 }
