@@ -15,7 +15,7 @@ export function AltPost() {
     isError,
     failureReason,
   } = useQuery<ThreadEntity[]>({
-    queryKey: ['threads'],
+    queryKey: ['thread-user', id],
     queryFn: async () => {
       const response = await api.get(`/threads/user/${id}`);
       return response.data;
@@ -25,13 +25,15 @@ export function AltPost() {
   return (
     <Box>
       {isError && <Text color={'red'}>{failureReason?.message}</Text>}
-      {isLoading || !threads ? (
+      {isLoading ? (
         <Box display={'flex'} justifyContent={'center'} paddingY={50}>
           <Spinner />
         </Box>
       ) : (
         <Box>
-          {threads?.map((thread) => <CardThread {...thread} key={thread.id} />)}
+          {(threads || []).map((thread) => (
+            <CardThread {...thread} key={thread.id} />
+          ))}
         </Box>
       )}
     </Box>

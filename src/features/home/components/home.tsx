@@ -18,7 +18,7 @@ export function Home() {
     error,
     status,
   } = useInfiniteQuery({
-    queryKey: ['threads'],
+    queryKey: ['threads', 'home'],
     queryFn: async ({ pageParam = 1 }) => {
       const res = await api.get(`/threads?page=${pageParam}&limit=5`);
       return res.data as ThreadEntity[];
@@ -63,14 +63,12 @@ export function Home() {
             .flat()
             .map((thread) => <CardThread {...thread} key={thread.id} />)}
 
-          {/* loading spinner untuk load berikutnya */}
           {isFetchingNextPage && (
             <Box display="flex" justifyContent="center" py={5}>
               <Spinner />
             </Box>
           )}
 
-          {/* sentinel div untuk observer */}
           <Box ref={loadMoreRef} h="20px" />
         </Box>
       )}
