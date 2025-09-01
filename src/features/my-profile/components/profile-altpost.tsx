@@ -25,7 +25,7 @@ export function AltPost() {
   return (
     <Box>
       {isError && <Text color={'red'}>{failureReason?.message}</Text>}
-      {isLoading ? (
+      {isLoading || !threads ? (
         <Box display={'flex'} justifyContent={'center'} paddingY={50}>
           <Spinner />
         </Box>
