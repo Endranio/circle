@@ -46,7 +46,7 @@ export default function CreateReply() {
   });
 
   const queryClient = useQueryClient();
-  const { mutateAsync } = useMutation<
+  const { mutateAsync, isPending } = useMutation<
     ReplyResponse,
     Error,
     CreateReplySchemaDTO
@@ -193,6 +193,7 @@ export default function CreateReply() {
               backgroundColor="brand.500"
               fontWeight="bold"
               type="submit"
+              loading={isPending}
             >
               Reply
             </Button>

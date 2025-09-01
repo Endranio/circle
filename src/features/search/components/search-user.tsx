@@ -10,7 +10,7 @@ import { SearchUserCard } from './search-user-card';
 
 export function SearchUsers() {
   const [searchText, setSearchText] = useState<string>('');
-  const [searchTextDebounce] = useDebounce(searchText, 1000);
+  const [searchTextDebounce] = useDebounce(searchText, 500);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setSearchText(e.target.value);
